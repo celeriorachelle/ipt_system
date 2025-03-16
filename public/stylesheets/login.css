@@ -85,7 +85,6 @@ input:focus {
 }
 button {
   width: 25%;
-  margin-left: 23px;
   margin-top: 10px;
   padding: 10px;
   background-color: #6939a0;
@@ -116,4 +115,44 @@ button:hover {
 .forgot-password a:hover, .submit-container a:hover {
   color: #2f4ac5;
   text-decoration: underline;
+}
+
+.hidden {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.visible {
+  display: block;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+#register-popup {
+  background-image: url('/images/bg5.jpg');
+  background-size: cover;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 50%;
+  height: 70%;
+  border-radius: 10px;
+}
+
+.popup-content {
+  position: relative;
+  height: 100%;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
 }

@@ -14,26 +14,68 @@
     
     <section class="section2">
         <div class="login-container">
-                <h2>Sign In to Your Account</h2>
+            <h2>Sign In to Your Account</h2>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" id="email" placeholder="Enter your Email" required>
+            <label for="email">Email</label>
+            <input type="text" id="email" placeholder="Enter your Email" required>
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="text" id="password" placeholder="Enter your Password" required>
+            <label for="password">Password</label>
+            <input type="text" id="password" placeholder="Enter your Password" required>
             </div>
 
             <button type="submit">Log In</button>
             
             <div class="forgot-password">
-                <a href="#">Forgot Password?</a>
+            <a href="#">Reset Password</a>
+            </div>
+            <div class="submit-container"></div>
+            <a href="#" id="register-link">Don't have an account yet?</a>
             </div>
 
-            <div class="submit-container">
-                <a href="/register">REGISTER</a>
+            <div id="register-popup" class="hidden">
+            <div class="popup-content">
+                <span class="close-btn">&times;</span>
+                <h2>Register</h2>
+                <form>
+                <div class="form-group">
+                    <label for="reg-fullname">Full Name</label>
+                    <input type="text" id="reg-fullname" placeholder="Enter your Full Name" required style="width: 95%;">
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" placeholder="Enter your Email" required style="width: 95%;">
+                </div>
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" placeholder="Enter your Username" required style="width: 95%;">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" placeholder="Enter your Password" required style="width: 95%;">
+                </div>
+                <div class="form-group">
+                    <label for="reg-confirm-password">Confirm Password</label>
+                    <input type="password" id="reg-confirm-password" placeholder="Confirm your Password" required style="width: 95%;">
+                </div>
+                <button type="submit" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px;">Register</button>
+                </form>
             </div>
+            </div>
+
+            <script>
+            document.getElementById('register-link').addEventListener('click', function(event) {
+                event.preventDefault();
+                document.getElementById('register-popup').classList.remove('hidden');
+                document.getElementById('register-popup').classList.add('visible');
+            });
+
+            document.querySelector('.close-btn').addEventListener('click', function() {
+                document.getElementById('register-popup').classList.remove('visible');
+                document.getElementById('register-popup').classList.add('hidden');
+            });
+            </script>
         </div>
     </section>
 </body>
