@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Scheduling Dashboard</title>
+</head>
+<body>
+    <a href="/">Home</a>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    <a href="/lab">Lab</a>
+    <div class="container">
+        <h2>Lab Scheduling Dashboard</h2>
+        
+        <div class="grid">
+            <div class="box">
+                <h3>Booked Labs Overview</h3>
+                <p id="booked-overview">No labs booked yet.</p>
+            </div>
+            <div class="box">
+                <h3>Available Labs</h3>
+                <p id="available-labs">Lab A, Lab B, Lab C</p>
+            </div>
+            <div class="box full-width">
+                <h3>Quick Book</h3>
+                <label for="lab">Select Lab:</label>
+                <select id="lab">
+                    <option value="Lab A">Lab A</option>
+                    <option value="Lab B">Lab B</option>
+                    <option value="Lab C">Lab C</option>
+                </select>
+                <label for="date">Select Date:</label>
+                <input type="date" id="date">
+                <label for="time">Select Time:</label>
+                <input type="time" id="time">
+                <button onclick="bookLab()">Book Slot</button>
+            </div>
+            <div class="box full-width">
+                <h3>Calendar View</h3>
+                <div id="calendar">No scheduled bookings.</div>
+            </div>
+            <div class="box full-width">
+                <h3>Notifications</h3>
+                <div class="notifications" id="notifications">No upcoming bookings.</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function bookLab() {
+            let lab = document.getElementById('lab').value;
+            let date = document.getElementById('date').value;
+            let time = document.getElementById('time').value;
+            
+            if (!date || !time) {
+                alert("Please select date and time");
+                return;
+            }
+            
+            let scheduleDiv = document.getElementById('calendar');
+            let newBooking = document.createElement('div');
+            newBooking.textContent = `${lab} - ${date} at ${time}`;
+            scheduleDiv.appendChild(newBooking);
+            
+            let bookedOverview = document.getElementById('booked-overview');
+            bookedOverview.textContent = "Labs have been booked.";
+            
+            let notificationDiv = document.getElementById('notifications');
+            let newNotification = document.createElement('div');
+            newNotification.textContent = `Upcoming: ${lab} on ${date} at ${time}`;
+            notificationDiv.appendChild(newNotification);
+        }
+    </script>
+</body>
+</html>
