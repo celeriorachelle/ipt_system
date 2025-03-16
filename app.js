@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var registerRouter = require('./routes/register');
+const registerRouter = require('./routes/register');
 var loginRouter = require('./routes/login');
 var labRouter = require('./routes/lab');
 
