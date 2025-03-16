@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab Scheduling Dashboard</title>
+    <link rel="stylesheet" href="/stylesheets/lab.css">
 </head>
 <body>
-    <a href="/">Home</a>
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
-    <a href="/lab">Lab</a>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/register">Register</a></li>
+            <li><a href="/lab">Lab</a></li>
+        </ul>
+    </nav>
+
     <div class="container">
         <h2>Lab Scheduling Dashboard</h2>
         
@@ -22,7 +27,7 @@
                 <h3>Available Labs</h3>
                 <p id="available-labs">Lab A, Lab B, Lab C</p>
             </div>
-            <div class="box full-width">
+            <div class="box full-width" style="width: 97%;">
                 <h3>Quick Book</h3>
                 <label for="lab">Select Lab:</label>
                 <select id="lab">
