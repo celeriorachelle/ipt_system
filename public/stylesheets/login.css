@@ -156,3 +156,17 @@ button:hover {
   right: 5px;
   cursor: pointer;
 }
+
+/* Add this CSS rule to make the button responsive */
+.responsive-button {
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .responsive-button {
+      width: 90%;
+  }
+}

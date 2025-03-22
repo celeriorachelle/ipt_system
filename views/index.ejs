@@ -25,7 +25,7 @@
             <input type="text" id="password" placeholder="Enter your Password" required>
             </div>
 
-            <button type="submit">Log In</button>
+            <button type="button" onclick="redirectToDashboard()">Log In</button>
             
             <div class="forgot-password">
             <a href="#">Reset Password</a>
@@ -40,8 +40,12 @@
                 <h2>Register</h2>
                 <form>
                 <div class="form-group">
-                    <label for="reg-fullname">Full Name</label>
-                    <input type="text" id="reg-fullname" placeholder="Enter your Full Name" required style="width: 95%;">
+                    <label for="reg-firstname">First Name</label>
+                    <input type="text" id="reg-firstname" placeholder="Enter your First Name" required style="width: 95%;">
+                </div>
+                <div class="form-group">
+                    <label for="reg-lastname">Last Name</label>
+                    <input type="text" id="reg-lastname" placeholder="Enter your Last Name" required style="width: 95%;">
                 </div>
                 <div class="form-group">
                     <label for="reg-email">Email</label>
@@ -65,6 +69,11 @@
             </div>
 
             <script>
+
+            function redirectToDashboard() {
+                window.location.href = '/lab';
+            }
+
             document.getElementById('register-link').addEventListener('click', function(event) {
                 event.preventDefault();
                 document.getElementById('register-popup').classList.remove('hidden');
