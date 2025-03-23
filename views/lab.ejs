@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab Scheduling Dashboard</title>
     <link rel="stylesheet" href="/stylesheets/lab.css">
 </head>
+
 <body>
     <nav>
         <ul>
@@ -17,7 +19,7 @@
 
     <div class="container">
         <h2>Lab Scheduling Dashboard</h2>
-        
+
         <div class="grid">
             <div class="box">
                 <h3>Booked Labs Overview</h3>
@@ -31,31 +33,40 @@
                 <h3>Quick Book</h3>
                 <label for="name">Your Name:</label>
                 <input type="text" id="name" placeholder="Enter your name">
-                
+
                 <label for="section">Course & Section:</label>
                 <input type="text" id="section" placeholder="Enter your course & section">
-                
+
                 <label for="purpose">Purpose of Use:</label>
                 <input type="text" id="purpose" placeholder="Enter purpose">
-                
+
                 <label for="lab">Select Lab:</label>
                 <select id="lab" onchange="updateAvailablePCs()">
                     <option value="Lab 1">Lab 1</option>
                     <option value="Lab 2">Lab 2</option>
                     <option value="Lab 3">Lab 3</option>
                 </select>
-                
+
                 <label for="pc">Select PC:</label>
                 <select id="pc"></select>
-                
+
                 <label for="date">Select Date:</label>
                 <input type="date" id="date">
-                
+
                 <label for="time">Select Time:</label>
                 <input type="time" id="time">
-                
+
+                <label for="duration">Select Duration:</label>
+                <select id="duration">
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="45">45 minutes</option>
+                    <option value="60">1 hour</option>
+                    <option value="75">1 hour 15 minutes</option>
+                    <option value="90">1 hour 30 minutes</option>
+                </select>
+
                 <button onclick="bookLab()">Book Slot</button>
-                <button onclick="clearBookings()">Clear All</button>
             </div>
             <div class="box full-width">
                 <h3>Calendar View</h3>
@@ -71,7 +82,6 @@
             </div>
         </div>
     </div>
-    
     <script>
         let bookings = [];
         let pcs = {
@@ -84,7 +94,7 @@
             let selectedLab = document.getElementById('lab').value;
             let pcDropdown = document.getElementById('pc');
             pcDropdown.innerHTML = "";
-            
+
             pcs[selectedLab].forEach(pc => {
                 let option = document.createElement('option');
                 option.value = pc;
@@ -93,7 +103,7 @@
                 pcDropdown.appendChild(option);
             });
         }
-        
+
         function bookLab() {
             let name = document.getElementById('name').value;
             let section = document.getElementById('section').value;
@@ -102,7 +112,7 @@
             let pc = document.getElementById('pc').value;
             let date = document.getElementById('date').value;
             let time = document.getElementById('time').value;
-            
+
             if (!name || !section || !purpose || !date || !time || !pc) {
                 alert("Please fill in all fields");
                 return;
@@ -113,10 +123,36 @@
                 return;
             }
 
+            if (bookings.filter(b => b.name === name).length >= 2) {
+                alert("You can only book up to 2 slots.");
+                return;
+            }
+
+            let bookingTime = new Date(`${date}T${time}`);
+            if (bookings.some(b => b.name === name && Math.abs(new Date(`${b.date}T${b.time}`) - bookingTime) < 2 * 60 * 60 * 1000)) {
+                alert("You must have a gap of at least 2 hours between bookings.");
+                return;
+            }
+
             bookings.push({ name, section, purpose, lab, pc, date, time });
             document.getElementById('booked-overview').textContent = "Labs have been booked.";
-            
+
             updateAvailablePCs();
+            updateCalendar();
+            updateNotifications();
+            updateCalendar();
+            updateNotifications();
+            clearForm();
+        }
+
+        function updateCalendar() {
+            let calendar = document.getElementById('calendar');
+            calendar.innerHTML = bookings.map(b => `<p>${b.date} - ${b.time}: ${b.lab} (${b.pc})</p>`).join('');
+        }
+
+        function updateNotifications() {
+            let notifications = document.getElementById('notifications');
+            notifications.innerHTML = bookings.map(b => `<p>${b.date} - ${b.time}: ${b.lab} (${b.pc})</p>`).join('');
         }
 
         function viewReceipt() {
@@ -124,20 +160,28 @@
                 alert("No bookings found.");
                 return;
             }
-            
+
             let lastBooking = bookings[bookings.length - 1];
             let receiptPage = window.open("", "_blank");
             receiptPage.document.write(`<h2>Booking Receipt</h2>
-                                        <p><strong>Name:</strong> ${lastBooking.name}</p>
-                                        <p><strong>Course & Section:</strong> ${lastBooking.section}</p>
-                                        <p><strong>Purpose:</strong> ${lastBooking.purpose}</p>
-                                        <p><strong>Lab:</strong> ${lastBooking.lab}</p>
-                                        <p><strong>PC:</strong> ${lastBooking.pc}</p>
-                                        <p><strong>Date:</strong> ${lastBooking.date}</p>
-                                        <p><strong>Time:</strong> ${lastBooking.time}</p>`);
+                                            <p><strong>Name:</strong> ${lastBooking.name}</p>
+                                            <p><strong>Course & Section:</strong> ${lastBooking.section}</p>
+                                            <p><strong>Purpose:</strong> ${lastBooking.purpose}</p>
+                                            <p><strong>Lab:</strong> ${lastBooking.lab}</p>
+                                            <p><strong>PC:</strong> ${lastBooking.pc}</p>
+                                            <p><strong>Date:</strong> ${lastBooking.date}</p>
+                                            <p><strong>Time:</strong> ${lastBooking.time}</p>`);
         }
+
+        function clearBookings() {
+            bookings = [];
+            document.getElementById('booked-overview').textContent = "No labs booked yet.";
+            updateAvailablePCs();
+        }
+
 
         document.addEventListener("DOMContentLoaded", updateAvailablePCs);
     </script>
 </body>
+
 </html>

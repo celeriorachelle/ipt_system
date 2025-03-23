@@ -6,7 +6,8 @@ body {
   background-image: url('/images/bg5.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-  overflow-y: hidden; ;
+  overflow-y: hidden; 
+  color: white;
 }
 
 .section1 h1 {
