@@ -6,11 +6,12 @@ body {
   background-image: url('/images/bg5.jpg');
   background-size: cover;
   background-repeat: no-repeat;
+  overflow-y: hidden; ;
 }
 
 .section1 h1 {
-  text-align: left;
-  margin-left: 25px;
+  margin-bottom: 1%;
+  text-align: center;
   margin-top: 0;
   color: #fff;
   font-family: 'Poppins', sans-serif;
@@ -19,61 +20,23 @@ body {
 
 }
 .section1 p {
+  font-family: 'Poppins', sans-serif;
   text-align: center;
   color: #ffffff;
 }
 
-.info-container {
-  position: relative;
+.sub-section {
+  align-self: center;
   display: flex;
-  margin: 10px;
+  justify-content: center;
+  align-items: center;
+  width: 50%;  
 }
 
-.info-btn {
-  background-color: #6939a0;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 16px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: bold;
-}
 
-.info-btn:hover {
-  background-color: #2f4ac5;
-}
-
-.info-content {
-  position: absolute;
-  left: 0;
-  top: 100%;
-  backdrop-filter: blur(10px);
-  background-color: rgba(132, 155, 230, 0.459);
-  border-radius: 5px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  width: 250px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  pointer-events: none; 
-  transition: background 0.3s ease-in-out;
-  font-family: 'Poppins', sans-serif;
-  font-size: small;
-}
-
-.info-container:hover .info-content {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-h2 {
+h3 {
   text-align: center;
   color: #fff;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.856);
 }
 
 .section1 {
@@ -174,56 +137,48 @@ button:hover {
   text-decoration: underline;
 }
 
-.hidden {
+.info-container:hover .head {
   display: none;
-  opacity: 0;
-  transition: opacity 0.5s ease;
 }
 
-.visible {
-  display: block;
-  opacity: 1;
-  transition: opacity 0.5s ease;
+.info-container:not(:hover) h2 {
+  display: none;
 }
 
-#register-popup {
-  background-image: url('/images/bg5.jpg');
-  background-size: cover;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 30px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  width: 50%;
-  height: 70%;
-  border-radius: 10px;
-}
-
-.popup-content {
+  .info-container {
+  margin: 5% 3% 0% 3%;
+  width: 200px;
+  height: 70px;
+  transition: all 0.5s ease;
+  color: white;
+  overflow: hidden;
   position: relative;
-  height: 100%;
+  
 }
 
-.close-btn {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  cursor: pointer;
-}
-
-/* Add this CSS rule to make the button responsive */
-.responsive-button {
+  .hidden-text {
+  text-align: center ;
+  font-family: 'Poppins', sans-serif;
+  opacity: 0; 
+  visibility: hidden;
+  transition: opacity 1s ease, visibility 1s ease;
+  color: white;
   padding: 10px;
-  width: 100%;
-  max-width: 300px;
   box-sizing: border-box;
 }
 
-@media (max-width: 600px) {
-  .responsive-button {
-      width: 90%;
-  }
+  .info-container:hover {
+  overflow: visible;
+  white-space: normal;
+  width: 400px;
+  height: 250px;
+}
+
+  .info-container:not(:hover) {
+  transition: width 0.5s ease, height 0.5s ease;
+}
+
+  .info-container:hover .hidden-text {
+  opacity: 1;
+  visibility: visible;
 }

@@ -11,24 +11,27 @@
     <section class="section1">
         <h1>LABORATORY RESOURCE SCHEDULER</h1>
         <p>Effortlessly manage and book laboratory resources with ease.</p>
-        <div class="info-container">
-            <button class="info-btn">About Us</button>
-            <div class="info-content">
-                <h2>About Us</h2>
-                <p>Our Laboratory Resource Scheduler helps students, teachers, and researchers efficiently book and manage lab schedules, ensuring smooth operations.</p>
-            </div>
-        </div>
-    
 
-        <div class="info-container">
-            <button class="info-btn">Contact Us</button>
-            <div class="info-content">
-                <h2>Contact Us</h2>
-                <p>📍 Location: City of Malabon University</p>
-                <p>📧 Email: support@labresourcescheduler.com</p>
-                <p>📞 Phone: +123 456 7890</p>
+        <section class="sub-section">
+
+            <div class="info-container" style="background-color: #6939a0; color: white; border-radius: 20px;">
+                <h3 class="head" style="font-family: 'Poppins', sans-serif;">About Us</h2>
+                <div class="hidden-text">
+                    <h2>About Us</h2>
+                    <p>Our Laboratory Resource Scheduler helps students, teachers, and researchers efficiently book and manage lab schedules, ensuring smooth operations.</p>
+                </div>
             </div>
-        </div>
+        
+            <div class="info-container" style="background-color: #6939a0; color: white; border-radius: 20px;">
+                <h3 class="head" style="font-family: 'Poppins', sans-serif;">Contact Us</h2>
+                <div class="hidden-text">
+                    <h2>Contact Us</h2>
+                    <p>📍 Location: City of Malabon University</p>
+                    <p>📧 Email: support@labresourcescheduler.com</p>
+                    <p>📞 Phone: +123 456 7890</p>
+                </div>
+            </div>
+        </section>
     </section>
     
     <section class="section2">
@@ -53,56 +56,12 @@
             <a href="#" id="register-link">Don't have an account yet?</a>
             </div>
 
-            <div id="register-popup" class="hidden">
-            <div class="popup-content">
-                <span class="close-btn">&times;</span>
-                <h2>Register</h2>
-                <form>
-                <div class="form-group">
-                    <label for="reg-firstname">First Name</label>
-                    <input type="text" id="reg-firstname" placeholder="Enter your First Name" required style="width: 95%;">
-                </div>
-                <div class="form-group">
-                    <label for="reg-lastname">Last Name</label>
-                    <input type="text" id="reg-lastname" placeholder="Enter your Last Name" required style="width: 95%;">
-                </div>
-                <div class="form-group">
-                    <label for="reg-email">Email</label>
-                    <input type="email" id="reg-email" placeholder="Enter your Email" required style="width: 95%;">
-                </div>
-                <div class="form-group">
-                    <label for="reg-username">Username</label>
-                    <input type="text" id="reg-username" placeholder="Enter your Username" required style="width: 95%;">
-                </div>
-                <div class="form-group">
-                    <label for="reg-password">Password</label>
-                    <input type="password" id="reg-password" placeholder="Enter your Password" required style="width: 95%;">
-                </div>
-                <div class="form-group">
-                    <label for="reg-confirm-password">Confirm Password</label>
-                    <input type="password" id="reg-confirm-password" placeholder="Confirm your Password" required style="width: 95%;">
-                </div>
-                <button type="submit" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px;">Register</button>
-                </form>
-            </div>
-            </div>
-
             <script>
 
             function redirectToDashboard() {
                 window.location.href = '/lab';
             }
 
-            document.getElementById('register-link').addEventListener('click', function(event) {
-                event.preventDefault();
-                document.getElementById('register-popup').classList.remove('hidden');
-                document.getElementById('register-popup').classList.add('visible');
-            });
-
-            document.querySelector('.close-btn').addEventListener('click', function() {
-                document.getElementById('register-popup').classList.remove('visible');
-                document.getElementById('register-popup').classList.add('hidden');
-            });
             </script>
         </div>
     </section>
