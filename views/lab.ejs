@@ -25,21 +25,37 @@
             </div>
             <div class="box">
                 <h3>Available Labs</h3>
-                <p id="available-labs">Lab A, Lab B, Lab C</p>
+                <p id="available-labs">Lab 1, Lab 2, Lab 3</p>
             </div>
             <div class="box full-width" style="width: 97%;">
                 <h3>Quick Book</h3>
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" placeholder="Enter your name">
+                
+                <label for="section">Course & Section:</label>
+                <input type="text" id="section" placeholder="Enter your course & section">
+                
+                <label for="purpose">Purpose of Use:</label>
+                <input type="text" id="purpose" placeholder="Enter purpose">
+                
                 <label for="lab">Select Lab:</label>
-                <select id="lab">
-                    <option value="Lab A">Lab A</option>
-                    <option value="Lab B">Lab B</option>
-                    <option value="Lab C">Lab C</option>
+                <select id="lab" onchange="updateAvailablePCs()">
+                    <option value="Lab 1">Lab 1</option>
+                    <option value="Lab 2">Lab 2</option>
+                    <option value="Lab 3">Lab 3</option>
                 </select>
+                
+                <label for="pc">Select PC:</label>
+                <select id="pc"></select>
+                
                 <label for="date">Select Date:</label>
                 <input type="date" id="date">
+                
                 <label for="time">Select Time:</label>
                 <input type="time" id="time">
+                
                 <button onclick="bookLab()">Book Slot</button>
+                <button onclick="clearBookings()">Clear All</button>
             </div>
             <div class="box full-width">
                 <h3>Calendar View</h3>
@@ -49,33 +65,79 @@
                 <h3>Notifications</h3>
                 <div class="notifications" id="notifications">No upcoming bookings.</div>
             </div>
+            <div class="box full-width">
+                <h3>Booking Receipt</h3>
+                <button onclick="viewReceipt()">View Receipt</button>
+            </div>
         </div>
     </div>
     
     <script>
+        let bookings = [];
+        let pcs = {
+            "Lab 1": Array.from({ length: 20 }, (_, i) => `PC ${i + 1}`),
+            "Lab 2": Array.from({ length: 20 }, (_, i) => `PC ${i + 1}`),
+            "Lab 3": Array.from({ length: 20 }, (_, i) => `PC ${i + 1}`)
+        };
+
+        function updateAvailablePCs() {
+            let selectedLab = document.getElementById('lab').value;
+            let pcDropdown = document.getElementById('pc');
+            pcDropdown.innerHTML = "";
+            
+            pcs[selectedLab].forEach(pc => {
+                let option = document.createElement('option');
+                option.value = pc;
+                option.textContent = bookings.some(b => b.lab === selectedLab && b.pc === pc) ? `${pc} (Booked)` : pc;
+                option.disabled = bookings.some(b => b.lab === selectedLab && b.pc === pc);
+                pcDropdown.appendChild(option);
+            });
+        }
+        
         function bookLab() {
+            let name = document.getElementById('name').value;
+            let section = document.getElementById('section').value;
+            let purpose = document.getElementById('purpose').value;
             let lab = document.getElementById('lab').value;
+            let pc = document.getElementById('pc').value;
             let date = document.getElementById('date').value;
             let time = document.getElementById('time').value;
             
-            if (!date || !time) {
-                alert("Please select date and time");
+            if (!name || !section || !purpose || !date || !time || !pc) {
+                alert("Please fill in all fields");
+                return;
+            }
+
+            if (bookings.some(b => b.lab === lab && b.pc === pc)) {
+                alert("This PC is already booked. Please select another.");
+                return;
+            }
+
+            bookings.push({ name, section, purpose, lab, pc, date, time });
+            document.getElementById('booked-overview').textContent = "Labs have been booked.";
+            
+            updateAvailablePCs();
+        }
+
+        function viewReceipt() {
+            if (bookings.length === 0) {
+                alert("No bookings found.");
                 return;
             }
             
-            let scheduleDiv = document.getElementById('calendar');
-            let newBooking = document.createElement('div');
-            newBooking.textContent = `${lab} - ${date} at ${time}`;
-            scheduleDiv.appendChild(newBooking);
-            
-            let bookedOverview = document.getElementById('booked-overview');
-            bookedOverview.textContent = "Labs have been booked.";
-            
-            let notificationDiv = document.getElementById('notifications');
-            let newNotification = document.createElement('div');
-            newNotification.textContent = `Upcoming: ${lab} on ${date} at ${time}`;
-            notificationDiv.appendChild(newNotification);
+            let lastBooking = bookings[bookings.length - 1];
+            let receiptPage = window.open("", "_blank");
+            receiptPage.document.write(`<h2>Booking Receipt</h2>
+                                        <p><strong>Name:</strong> ${lastBooking.name}</p>
+                                        <p><strong>Course & Section:</strong> ${lastBooking.section}</p>
+                                        <p><strong>Purpose:</strong> ${lastBooking.purpose}</p>
+                                        <p><strong>Lab:</strong> ${lastBooking.lab}</p>
+                                        <p><strong>PC:</strong> ${lastBooking.pc}</p>
+                                        <p><strong>Date:</strong> ${lastBooking.date}</p>
+                                        <p><strong>Time:</strong> ${lastBooking.time}</p>`);
         }
+
+        document.addEventListener("DOMContentLoaded", updateAvailablePCs);
     </script>
 </body>
 </html>
