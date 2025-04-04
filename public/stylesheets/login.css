@@ -100,7 +100,7 @@ input {
 }
 
 input:focus {
-  border-color: #001a5c;;
+  border-color: #001a5c;
   box-shadow: 0 0 8px rgba(2, 1, 49, 0.781);
 }
 button {
@@ -123,29 +123,24 @@ button:hover {
 }
 
 .forgot-password a, .submit-container a {
-  color: white;
+  color: #e1e8f8;
   text-decoration: underline;
   font-size: 12px;
   font-family: 'Poppins', sans-serif;
   font-weight: 200px;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.938);
   transition: color 0.3s ease-in-out;
+  text-decoration: none;
+  border-radius: 5px;
+  display: inline-block;
 }
 
 .forgot-password a:hover, .submit-container a:hover {
-  color: #2f4ac5;
+  color: #001a5c;
   text-decoration: underline;
 }
 
-.info-container:hover .head {
-  display: none;
-}
-
-.info-container:not(:hover) h2 {
-  display: none;
-}
-
-  .info-container {
+.info-container {
   margin: 5% 3% 0% 3%;
   width: 200px;
   height: 70px;
@@ -153,32 +148,13 @@ button:hover {
   color: white;
   overflow: hidden;
   position: relative;
-  
+  background-color: blue; /* Changed background color to blue */
 }
 
-  .hidden-text {
-  text-align: center ;
-  font-family: 'Poppins', sans-serif;
-  opacity: 0; 
-  visibility: hidden;
-  transition: opacity 1s ease, visibility 1s ease;
-  color: white;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-  .info-container:hover {
+.info-container:hover {
   overflow: visible;
   white-space: normal;
-  width: 400px;
-  height: 250px;
-}
-
-  .info-container:not(:hover) {
-  transition: width 0.5s ease, height 0.5s ease;
-}
-
-  .info-container:hover .hidden-text {
-  opacity: 1;
-  visibility: visible;
+  width: 500px;
+  height: 300px;
+  background-color: blue; /* Changed background color to blue */
 }
