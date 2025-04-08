@@ -3,9 +3,9 @@ require('dotenv').config();
 
 const pool = mysql.createPool({
   host: 'localhost',
-  user: 'scheduler_user',
-  password: 'your_password',
-  database: 'lab_scheduler'
+  user: 'booking_admin',
+  password: 'ipt123',
+  database: 'ipt_system'
 });
 
 module.exports = pool.promise();

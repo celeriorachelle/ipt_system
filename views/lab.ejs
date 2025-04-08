@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab Scheduling Dashboard</title>
-    <link rel="stylesheet" href="/stylesheets/lab.css">
 </head>
 
 <body>
@@ -18,108 +17,6 @@
     </nav>
 
     <div class="container">
-        <h2>Lab Scheduling Dashboard</h2>
-
-        <div class="grid">
-            <div class="box">
-                <h3>Booked Labs Overview</h3>
-                <p id="booked-overview">No labs booked yet.</p>
-            </div>
-            <div class="box">
-                <h3>Available Labs</h3>
-                <p id="available-labs">Lab 1, Lab 2, Lab 3</p>
-            </div>
-            <div class="box full-width" style="width: 97%;">
-                <h3>Quick Book</h3>
-
-                <label for="section">Course & Section:</label>
-                <input type="text" id="section" placeholder="Enter your course & section">
-
-                <label for="purpose">Purpose of Use:</label>
-                <input type="text" id="purpose" placeholder="Enter purpose">
-
-                <label for="lab">Select Lab:</label>
-                <select id="lab" onchange="updateAvailablePCs()">
-                    <option value="Lab 1">Lab 1</option>
-                    <option value="Lab 2">Lab 2</option>
-                    <option value="Lab 3">Lab 3</option>
-                </select>
-
-                <label for="pc">Select PC:</label>
-                <select id="pc"></select>
-
-                <label for="date">Select Date:</label>
-                <input type="date" id="date">
-
-                <label for="time">Select Time:</label>
-                <input type="time" id="time">
-
-                <label for="duration">Select Duration:</label>
-                <select id="duration">
-                    <option value="15">15 minutes</option>
-                    <option value="30">30 minutes</option>
-                    <option value="45">45 minutes</option>
-                    <option value="60">1 hour</option>
-                    <option value="75">1 hour 15 minutes</option>
-                    <option value="90">1 hour 30 minutes</option>
-                </select>
-
-                <button onclick="bookLab()">Book Slot</button>
-            </div>
-            <div class="box full-width">
-                <h3>Calendar View</h3>
-                <div id="calendar">No scheduled bookings.</div>
-            </div>
-            <div class="box full-width">
-                <h3>Notifications</h3>
-                <div class="notifications" id="notifications">No upcoming bookings.</div>
-            </div>
-            <div class="box full-width">
-                <h3>Booking Receipt</h3>
-                <button onclick="viewReceipt()">View Receipt</button>
-            </div>
-        </div>
-    </div>
-    <script>
-        function bookLab() {
-            const course = document.getElementById('section').value;
-            const section = document.getElementById('section').value;
-            const user_id = 1; // Replace with actual logged-in user's ID
-            const purpose_of_use = document.getElementById('purpose').value;
-            const lab_choice = document.getElementById('lab').value;
-            const pc_choice = document.getElementById('pc').value;
-            const booking_time = document.getElementById('time').value;
-            const duration = document.getElementById('duration').value;
-    
-            fetch('/book', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    course,
-                    section,
-                    user_id,
-                    purpose_of_use,
-                    lab_choice,
-                    pc_choice,
-                    booking_time,
-                    duration
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Lab booked successfully!');
-                } else {
-                    alert('Booking failed. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error occurred during booking.');
-            });
-        }
-    </script>    
+        
 </body>
 </html>

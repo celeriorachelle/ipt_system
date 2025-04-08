@@ -51,14 +51,12 @@ app.post('/register', async (req, res) => {
   }
 
   try {
-    // If student_no should be auto-generated, remove it from the form and generate here
-    const generatedStudentNo = student_no || Math.floor(Math.random() * 100000);  // Example random generation
     
     // Insert user data into the database, including student_no
     const [result] = await db.query(
-      `INSERT INTO user (first_name, last_name, email, password, student_no) 
+      `INSERT INTO students (student_number, first_name, last_name, email, password) 
        VALUES (?, ?, ?, ?, ?)`,
-      [firstname, lastname, email, password, generatedStudentNo]
+      [firstname, lastname, email, password, student_no]
     );
     
     // Redirect to the index page (home route) after successful registration
