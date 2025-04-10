@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/lab.css">
     <title>Lab Scheduling Dashboard</title>
 </head>
 
@@ -13,10 +14,82 @@
             <li><a href="/">Home</a></li>
             <li><a href="/register">Register</a></li>
             <li><a href="/lab">Lab</a></li>
+            <form action="/lab/logout" method="POST">
+                <button type="submit">Log Out</button>
+            </form>
         </ul>
     </nav>
 
     <div class="container">
+        <h2>Lab Booking Form</h2>
+
+        <div class="taken-info">
+            <h3>Taken Slots (Today)</h3>
+            <% if (typeof takenLabs !== 'undefined' && Object.keys(takenLabs).length > 0) { %>
+              <ul>
+                <% for (let lab in takenLabs) { %>
+                  <li>
+                    <strong><%= lab %>:</strong>
+                    <ul>
+                      <% takenLabs[lab].forEach(function(pc) { %>
+                        <li><%= pc %></li>
+                      <% }); %>
+                    </ul>
+                  </li>
+                <% } %>
+              </ul>
+            <% } else { %>
+              <p>No labs have been booked for today.</p>
+            <% } %>                        
+        </div>        
+
+        <!-- Booking Form -->
+        <form action="/lab/confirm" method="POST">
+            <label for="student_number">Student Number:</label>
+            <input type="text" name="student_number" required>
         
+            <label for="section">Section:</label>
+            <input type="text" name="section" placeholder="e.g. 3G, 2G" required>
+        
+            <label for="purpose">Purpose of Use:</label>
+            <textarea name="purpose" rows="3" required></textarea>
+        
+            <label for="lab">Select Lab:</label>
+            <select name="lab" required>
+                <option value="Lab 1">Lab 1</option>
+                <option value="Lab 2">Lab 2</option>
+                <option value="Lab 3">Lab 3</option>
+            </select>
+        
+            <label for="pc">Select PC:</label>
+            <select name="pc" required>
+                <% for (let i = 1; i <= 20; i++) { %>
+                    <option value="PC <%= i %>">PC <%= i %></option>
+                <% } %>
+            </select>
+        
+            <label for="booking_date">Booking Date:</label>
+            <input type="date" name="booking_date" required>
+        
+            <label for="duration">Usage Duration:</label>
+            <select name="duration" required>
+                <option value="01:30:00">1 hour and 30 minutes</option>
+                <option value="01:15:00">1 hour and 15 minutes</option>
+                <option value="01:00:00">1 hour</option>
+                <option value="00:45:00">45 minutes</option>
+                <option value="00:30:00">30 minutes</option>
+                <option value="00:15:00">15 minutes</option>
+            </select>
+        
+            <button type="submit">Proceed to Confirmation</button>
+        </form>        
+
+        <% if (typeof alert !== 'undefined') { %>
+        <script>
+            alert("<%= alert %>");
+        </script>
+        <% } %>
+    </div>
+
 </body>
 </html>

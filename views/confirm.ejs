@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/confirm.css">
+    <title>Confirm Booking</title>
+</head>
+<body>
+    <h2>Booking Confirmation</h2>
+
+    <div style="text-align: center;">
+        <p><strong>Student Number:</strong> <%= booking.student_number %></p>
+        <p><strong>Section:</strong> <%= booking.section %></p>
+        <p><strong>Purpose:</strong> <%= booking.purpose %></p>
+        <p><strong>Lab:</strong> <%= booking.lab %></p>
+        <p><strong>PC:</strong> <%= booking.pc %></p>
+        <p><strong>Booking Date:</strong> <%= booking.booking_date %></p>
+        <p><strong>Usage Duration:</strong> <%= booking.duration %></p>
+    </div>
+
+    <form action="/lab" method="POST">
+        <input type="hidden" name="student_number" value="<%= booking.student_number %>">
+        <input type="hidden" name="section" value="<%= booking.section %>">
+        <input type="hidden" name="purpose" value="<%= booking.purpose %>">
+        <input type="hidden" name="lab" value="<%= booking.lab %>">
+        <input type="hidden" name="pc" value="<%= booking.pc %>">
+        <input type="hidden" name="booking_date" value="<%= booking.booking_date %>">
+        <input type="hidden" name="duration" value="<%= booking.duration %>">
+        <button type="submit">Confirm Booking</button>
+    </form>
+
+    <a href="/lab">Cancel</a>
+</body>
+</html>

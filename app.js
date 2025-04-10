@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var labRouter = require('./routes/lab');
 var registerRouter = require('./routes/register');
+var forgotRouter = require('./routes/forgot');
 
 var app = express();
 
@@ -23,51 +24,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const session = require('express-session');
+
+// Session middleware
+app.use(session({
+  secret: 'lab_scheduler_key123',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
 // routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/lab', labRouter);
 app.use('/register', registerRouter);
-
-// ✅ GET all bookings
-app.get('/lab', async (req, res) => {
-  try {
-    const [rows] = await db.query('SELECT * FROM bookings');
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Database query failed' });
-  }
-});
-
-app.post('/register', async (req, res) => {
-  console.log(req.body); // Log the request body to check if it's correct
-
-  const { firstname, lastname, email, password, confirmPassword, student_no } = req.body;
-
-  // Check if the passwords match
-  if (password !== confirmPassword) {
-    return res.status(400).send('Passwords do not match.');
-  }
-
-  try {
-    
-    // Insert user data into the database, including student_no
-    const [result] = await db.query(
-      `INSERT INTO students (student_number, first_name, last_name, email, password) 
-       VALUES (?, ?, ?, ?, ?)`,
-      [firstname, lastname, email, password, student_no]
-    );
-    
-    // Redirect to the index page (home route) after successful registration
-    res.redirect('/');  // Redirect to home page ('/')
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error registering user.');
-  }
-});
-
-
+app.use('/forgot', forgotRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
