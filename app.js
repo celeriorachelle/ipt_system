@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -10,6 +11,7 @@ var usersRouter = require('./routes/users');
 var labRouter = require('./routes/lab');
 var registerRouter = require('./routes/register');
 var forgotRouter = require('./routes/forgot');
+var otpRouter = require('./routes/otp');
 
 var app = express();
 
@@ -40,6 +42,8 @@ app.use('/users', usersRouter);
 app.use('/lab', labRouter);
 app.use('/register', registerRouter);
 app.use('/forgot', forgotRouter);
+app.use('/otp', otpRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

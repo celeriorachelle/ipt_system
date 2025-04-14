@@ -34,8 +34,7 @@ router.post('/', async function (req, res, next) {
       [student_no, firstname, lastname, email, hashedPassword]
     );
 
-    console.log('Inserted student:', result);
-    res.redirect('/'); // Or show a success message page
+    res.redirect('/');
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY') {
       res.status(400).send('Email or Student Number already exists.');

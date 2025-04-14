@@ -5,4 +5,4 @@ router.get('/', (req, res) => {
   res.send('Users route is working!');
 });
 
-module.exports = router;  // ✅ Make sure you are exporting correctly
+module.exports = router;

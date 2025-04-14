@@ -11,7 +11,7 @@ router.get('/', async function (req, res, next) {
 
   try {
     const student_number = req.session.user.student_number;
-    const currentMonth = moment().format('YYYY-MM');  // Format as YYYY-MM
+    const currentMonth = moment().format('YYYY-MM');
 
     const [existingBookings] = await db.execute(`
       SELECT * FROM bookings
