@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/styles/lab.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Admin Dashboard</h1>
+  </header>
+
+  <!-- Lab Availability Section -->
+  <section>
+    <h2>Lab Availability</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Lab Name</th>
+          <th>Subject</th>
+          <th>Schedule</th>
+          <th>Faculty</th>
+          <th>Availability</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% labStatus.forEach(lab => { %>
+          <tr>
+            <td><%= lab.lab_name %></td>
+            <td><%= lab.subject %></td>
+            <td><%= lab.schedule %></td>
+            <td><%= lab.faculty %></td>
+            <td><%= lab.available ? 'Available' : 'Not Available' %></td>
+            <td>
+              <!-- Update Form -->
+              <form action="/admin/update-lab" method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="<%= lab.id %>">
+                <button type="submit" class="btn-update">Update</button>
+              </form>
+
+              <!-- Delete Form -->
+              <form action="/admin/delete-lab" method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="<%= lab.id %>">
+                <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this lab record?')">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Add New Lab Availability -->
+  <section>
+    <h2>Add New Lab Availability</h2>
+    <form action="/admin/create-lab" method="POST" class="form-lab">
+      <label for="lab_name">Lab Name:</label>
+      <input type="text" id="lab_name" name="lab_name" required>
+
+      <label for="subject">Subject:</label>
+      <input type="text" id="subject" name="subject" required>
+
+      <label for="schedule">Schedule:</label>
+      <input type="text" id="schedule" name="schedule" required>
+
+      <label for="faculty">Faculty:</label>
+      <input type="text" id="faculty" name="faculty" required>
+
+      <label for="available">Available:</label>
+      <select id="available" name="available">
+        <option value="1">Available</option>
+        <option value="0">Not Available</option>
+      </select>
+
+      <button type="submit" class="btn-add">Add Lab</button>
+    </form>
+  </section>
+
+  <!-- Booking Section -->
+  <section>
+    <h2>Bookings</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Booking ID</th>
+          <th>User Type</th>
+          <th>Section</th>
+          <th>Subject</th>
+          <th>Purpose</th>
+          <th>Lab</th>
+          <th>Booking Date</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% bookings.forEach(booking => { %>
+          <tr>
+            <td><%= booking.id %></td>
+            <td><%= booking.user_type %></td>
+            <td><%= booking.section %></td>
+            <td><%= booking.subject %></td>
+            <td><%= booking.purpose_of_use %></td>
+            <td><%= booking.lab_selection %></td>
+            <td><%= booking.booking_date %></td>
+            <td><%= booking.start_time %></td>
+            <td><%= booking.end_time %></td>
+            <td>
+              <form action="/admin/delete-booking" method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="<%= booking.id %>">
+                <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this booking?')">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </section>
+
+</body>
+</html>

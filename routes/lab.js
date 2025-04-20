@@ -1,141 +1,94 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const moment = require('moment');
 
-/// GET the booking page
+// GET lab booking form
 router.get('/', async function (req, res, next) {
   if (!req.session.user) {
     return res.redirect('/');
   }
 
-  try {
-    const student_number = req.session.user.student_number;
-    const currentMonth = moment().format('YYYY-MM');
-
-    const [existingBookings] = await db.execute(`
-      SELECT * FROM bookings
-      WHERE student_booking_number = ? AND DATE_FORMAT(booking_date, '%Y-%m') = ?
-    `, [student_number, currentMonth]);
-
-    const [takenSlots] = await db.execute(`
-      SELECT lab_selection, pc_selection
-      FROM bookings
-      WHERE booking_date = CURDATE()
-    `);
-
-    // Format taken slots into takenLabs object
-    const takenLabs = {};
-    takenSlots.forEach(slot => {
-      if (!takenLabs[slot.lab_selection]) {
-        takenLabs[slot.lab_selection] = [];
-      }
-      takenLabs[slot.lab_selection].push(slot.pc_selection);
-    });
-
-    res.render('lab', { takenLabs: takenLabs });
-
-  } catch (error) {
-    console.error('Error fetching taken slots or checking existing bookings:', error);
-    res.status(500).send('Failed to load taken slots or check existing bookings.');
-  }
+  res.render('lab');
 });
 
-// GET confirmation page for booking (this route shows the confirmation page with data)
+// POST booking confirmation
 router.post('/confirm', async function (req, res, next) {
   const {
-    student_number,
+    user_type,
     section,
+    subject,
     purpose,
     lab,
-    pc,
     booking_date,
-    duration
+    start_time,
+    end_time
   } = req.body;
 
-  // Get the current month from the booking date
-  const bookingMonth = moment(booking_date).format('YYYY-MM');  // Format the booking date to YYYY-MM
-  const currentMonth = moment().format('YYYY-MM');  // Get the current month as YYYY-MM
-
-  // Check if the user has any existing bookings for the booking month
-  const [existingBookings] = await db.execute(`
-    SELECT * FROM bookings
-    WHERE student_booking_number = ? AND DATE_FORMAT(booking_date, '%Y-%m') = ?
-  `, [student_number, bookingMonth]);
-
-  // If the user has existing bookings for the current month, prevent the booking
-  if (existingBookings.length > 0 && bookingMonth === currentMonth) {
-    return res.render('lab', { 
-      alert: "You have already reached the maximum booking schedule for the current month."
-    });
-  }
-
-  // Store data in session temporarily for confirmation
   req.session.bookingData = {
-    student_number,
+    user_type,
     section,
+    subject,
     purpose,
     lab,
-    pc,
     booking_date,
-    duration
+    start_time,
+    end_time
   };
 
-  // Render confirmation page with session data
   res.render('confirm', { booking: req.session.bookingData });
 });
 
-// POST booking form after confirmation
+// POST final booking submission
 router.post('/', async function (req, res, next) {
   if (!req.session.user) {
     return res.redirect('/');
   }
 
   const {
-    student_number,
+    user_type,
     section,
+    subject,
     purpose,
     lab,
-    pc,
     booking_date,
-    duration
+    start_time,
+    end_time
   } = req.body;
 
-  // Validate student number matches session user
-  if (student_number !== req.session.user.student_number) {
-    return res.render('lab', { alert: 'Student number does not match your session!' });
-  }
+  const student_number = req.session.user.student_number || req.session.user.faculty_id;
+
+  const values = [
+    student_number,
+    user_type || null,
+    section || null,
+    subject || null,
+    purpose || null,
+    lab || null,
+    booking_date || null,
+    start_time || null,
+    end_time || null
+  ];
 
   try {
     const insertQuery = `
       INSERT INTO bookings 
-        (student_booking_number, section, purpose_of_use, lab_selection, pc_selection, booking_date, usage_duration)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+        (student_booking_number, user_type, section, subject, purpose_of_use, lab_selection, booking_date, start_time, end_time)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const values = [
-      student_number,
-      section,
-      purpose,
-      lab,
-      pc,
-      booking_date,
-      duration
-    ];
-
-    // Store the booking data temporarily in session for receipt
-    req.session.bookingData = {
-      student_number,
-      section,
-      purpose,
-      lab,
-      pc,
-      booking_date,
-      duration
-    };
 
     await db.execute(insertQuery, values);
 
-    // Render the booking receipt page with session data
+    req.session.bookingData = {
+      user_type,
+      section,
+      subject,
+      purpose,
+      lab,
+      booking_date,
+      start_time,
+      end_time
+    };
+
     res.render('receipt', { booking: req.session.bookingData });
 
   } catch (error) {
@@ -144,14 +97,73 @@ router.post('/', async function (req, res, next) {
   }
 });
 
-// Logout functionality
-router.post('/logout', function (req, res, next) {
-  // Destroy the session
-  req.session.destroy(function (err) {
-    if (err) {
-      return next(err);
+// POST route to check for booking conflicts (real-time validation)
+router.post('/check-availability', async (req, res) => {
+  const { lab, booking_date, start_time, end_time } = req.body;
+
+  try {
+    const query = `
+      SELECT * FROM bookings
+      WHERE lab_selection = ?
+        AND booking_date = ?
+        AND (
+          (start_time < ? AND end_time > ?)
+          OR (start_time < ? AND end_time > ?)
+          OR (start_time >= ? AND end_time <= ?)
+          OR (start_time <= ? AND end_time >= ?)
+        )
+    `;
+
+    const [conflicts] = await db.execute(query, [
+      lab, booking_date,
+      end_time, start_time,
+      end_time, start_time,
+      start_time, end_time,
+      start_time, end_time
+    ]);
+
+    if (conflicts.length > 0) {
+      return res.json({ available: false });
     }
-    // Redirect to the index page (login page)
+
+    res.json({ available: true });
+  } catch (error) {
+    console.error('Conflict check failed:', error);
+    res.status(500).json({ error: 'Server error during conflict check.' });
+  }
+});
+
+// ✅ NEW: GET route to fetch lab availability by date
+router.get('/availability/:date', async (req, res) => {
+  const bookingDate = req.params.date;
+
+  try {
+    const [rows] = await db.execute(
+      'SELECT lab_selection FROM bookings WHERE booking_date = ?',
+      [bookingDate]
+    );
+
+    const availability = {
+      'Lab 1': true,
+      'Lab 2': true,
+      'Lab 3': true,
+    };
+
+    rows.forEach(row => {
+      availability[row.lab_selection] = false;
+    });
+
+    res.json(availability);
+  } catch (err) {
+    console.error('Availability fetch error:', err);
+    res.status(500).json({ error: 'Server error fetching availability.' });
+  }
+});
+
+// Logout route
+router.post('/logout', function (req, res, next) {
+  req.session.destroy(function (err) {
+    if (err) return next(err);
     res.redirect('/');
   });
 });

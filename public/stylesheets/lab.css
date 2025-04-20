@@ -1,142 +1,122 @@
-        /* Basic reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* General Body Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f7fa;
+  margin: 0;
+  padding: 0;
+}
 
-        /* General body styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-        }
+h2 {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 24px;
+  color: #1f3c6e;
+}
 
-        /* Navigation bar styling */
-        nav {
-            background-color: #3e8e41;
-            padding: 10px;
-        }
+form {
+  max-width: 600px;
+  margin: 30px auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        nav ul {
-            list-style-type: none;
-            display: flex;
-            justify-content: space-around;
-        }
+label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
 
-        nav ul li {
-            margin-right: 20px;
-        }
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
 
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 8px 16px;
-            border-radius: 5px;
-        }
+input[type="date"], input[type="time"] {
+  background-color: #fff;
+}
 
-        nav ul li a:hover {
-            background-color: #45a049;
-        }
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
 
-        nav form button {
-            padding: 8px 16px;
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+button:hover {
+  background-color: #0056b3;
+}
 
-        nav form button:hover {
-            background-color: #e60000;
-        }
+#availability-status {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+}
 
-        /* Container for form content */
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+/* Navigation Styles */
+nav {
+  background-color: #1f3c6e;
+  padding: 10px 20px;
+}
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+.nav {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+}
 
-        .taken-info {
-            margin-bottom: 30px;
-        }
+.nav-item {
+  margin-right: 15px;
+}
 
-        .taken-info h3 {
-            color: #333;
-        }
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
 
-        .taken-info ul {
-            list-style-type: none;
-        }
+.nav-link:hover {
+  text-decoration: underline;
+}
 
-        .taken-info ul li {
-            margin-bottom: 8px;
-        }
+.nav-item .btn {
+  background-color: #28a745;
+  border-radius: 5px;
+}
 
-        /* Form styling */
-        form {
-            display: grid;
-            gap: 15px;
-        }
+.nav-item .btn:hover {
+  background-color: #218838;
+}
 
-        label {
-            font-size: 1rem;
-            color: #555;
-        }
+.nav-link.active {
+  font-weight: bold;
+  color: #ffc107;
+}
 
-        input[type="text"],
-        input[type="date"],
-        select,
-        textarea {
-            padding: 10px;
-            font-size: 1rem;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            width: 100%;
-        }
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    align-items: center;
+  }
 
-        button[type="submit"] {
-            padding: 10px 20px;
-            background-color: #3e8e41;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
+  .nav-item {
+    margin: 10px 0;
+  }
 
-        button[type="submit"]:hover {
-            background-color: #45a049;
-        }
+  form {
+    width: 90%;
+    padding: 15px;
+  }
 
-        /* Media Queries for responsiveness */
-        @media (max-width: 600px) {
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            nav ul li {
-                margin-bottom: 10px;
-            }
-
-            .container {
-                margin: 10px;
-                padding: 15px;
-            }
-
-            button[type="submit"] {
-                width: 100%;
-            }
-        }
+  h2 {
+    font-size: 22px;
+  }
+}

@@ -4,6 +4,7 @@ const db = require('../db');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const speakeasy = require('speakeasy');
+const checkRole = require('../middlewares/checkRole'); // middleware to check user role
 
 // Create transporter
 const transporter = nodemailer.createTransport({
@@ -14,12 +15,13 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Login page
 router.get('/', function (req, res, next) {
   res.render('index');
 });
 
-// Single POST route handler
-router.post('/', async function (req, res, next) {
+// Handle login post with middleware to check user role
+router.post('/', checkRole, async function (req, res, next) {
   const { email, password } = req.body;
 
   try {
@@ -36,22 +38,22 @@ router.post('/', async function (req, res, next) {
       return res.render('index', { alert: 'Incorrect credentials' });
     }
 
-    // Generate OTP secret
+    // Generate OTP
     const secret = speakeasy.generateSecret({ length: 20 });
     const token = speakeasy.totp({
       secret: secret.base32,
       encoding: 'base32'
     });
 
-    // Store in session for verification (DON'T set user session yet)
+    // Store data in session
     req.session.otpSecret = secret.base32;
     req.session.otpEmail = email;
-    req.session.tempUser = {  // Store temporarily until OTP verification
+    req.session.tempUser = {
       student_number: user.student_number,
       email: user.email
     };
 
-    // Send OTP email
+    // Send OTP
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -61,13 +63,29 @@ router.post('/', async function (req, res, next) {
 
     await transporter.sendMail(mailOptions);
 
-    // Redirect to OTP verification page
     res.redirect('/otp');
-
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).send('Internal server error');
   }
+});
+
+// Admin password prompt page
+router.get('/admin-password', (req, res) => {
+  res.render('admin-password');
+});
+
+// Handle admin password check
+router.post('/admin-password', (req, res) => {
+  const enteredPass = req.body.adminPassword;
+  const actualPass = process.env.ADMIN_PASS;
+
+  if (enteredPass === actualPass && req.session.adminLogin) {
+    req.session.isAdmin = true;
+    return res.redirect('/admin');
+  }
+
+  res.render('admin-password', { alert: 'Incorrect admin password.' });
 });
 
 module.exports = router;
