@@ -133,69 +133,35 @@ router.post('/', async function (req, res, next) {
   }
 });
 
-// POST route to check for booking conflicts (real-time validation)
-// GET route to fetch detailed lab availability by date
-router.get('/availability/:date', async (req, res) => {
-  const bookingDate = req.params.date;
+
+// POST route to check lab availability for specific time slot
+router.post('/check-availability', async (req, res) => {
+  const { lab, booking_date, start_time, end_time } = req.body;
 
   try {
-    // Get all bookings for the date with time slots
-    const [bookings] = await db.execute(
-      `SELECT lab_selection, start_time, end_time 
-       FROM bookings 
-       WHERE booking_date = ? 
-       ORDER BY lab_selection, start_time`,
-      [bookingDate]
+    const [existingBookings] = await db.execute(
+      `SELECT * FROM bookings 
+       WHERE lab_selection = ? 
+         AND booking_date = ? 
+         AND (
+           (start_time < ? AND end_time > ?) -- overlapping slot
+           OR (start_time >= ? AND start_time < ?)
+           OR (end_time > ? AND end_time <= ?)
+         )`,
+      [lab, booking_date, end_time, start_time, start_time, end_time, start_time, end_time]
     );
 
-    // Organize by lab
-    const labDetails = {
-      'Lab 1': { available: true, bookedSlots: [] },
-      'Lab 2': { available: true, bookedSlots: [] },
-      'Lab 3': { available: true, bookedSlots: [] }
-    };
-
-    bookings.forEach(booking => {
-      labDetails[booking.lab_selection].available = false;
-      labDetails[booking.lab_selection].bookedSlots.push({
-        start: booking.start_time,
-        end: booking.end_time
-      });
-    });
-
-    res.json(labDetails);
-  } catch (err) {
-    console.error('Availability fetch error:', err);
-    res.status(500).json({ error: 'Server error fetching availability.' });
+    if (existingBookings.length > 0) {
+      res.json({ available: false });
+    } else {
+      res.json({ available: true });
+    }
+  } catch (error) {
+    console.error('Error checking availability:', error);
+    res.status(500).json({ error: 'Server error while checking availability.' });
   }
 });
 
-// ✅ NEW: GET route to fetch lab availability by date
-router.get('/availability/:date', async (req, res) => {
-  const bookingDate = req.params.date;
-
-  try {
-    const [rows] = await db.execute(
-      'SELECT lab_selection FROM bookings WHERE booking_date = ?',
-      [bookingDate]
-    );
-
-    const availability = {
-      'Lab 1': true,
-      'Lab 2': true,
-      'Lab 3': true,
-    };
-
-    rows.forEach(row => {
-      availability[row.lab_selection] = false;
-    });
-
-    res.json(availability);
-  } catch (err) {
-    console.error('Availability fetch error:', err);
-    res.status(500).json({ error: 'Server error fetching availability.' });
-  }
-});
 
 // Logout route
 router.post('/logout', function (req, res, next) {
@@ -203,6 +169,45 @@ router.post('/logout', function (req, res, next) {
     if (err) return next(err);
     res.redirect('/');
   });
+});
+
+// GET route to fetch lab availability (including booked time slots) by date
+router.get('/availability/:date', async (req, res) => {
+  const bookingDate = req.params.date;
+
+  try {
+    // Pull all bookings for that date, ordered by lab and start time
+    const [rows] = await db.execute(
+      `SELECT lab_selection, start_time, end_time
+       FROM bookings
+       WHERE booking_date = ?
+       ORDER BY lab_selection, start_time`,
+      [bookingDate]
+    );
+
+    // Initialize your labs
+    const labDetails = {
+      'Lab 1': { available: true, bookedSlots: [] },
+      'Lab 2': { available: true, bookedSlots: [] },
+      'Lab 3': { available: true, bookedSlots: [] }
+    };
+
+    // Mark as unavailable & record each booked slot
+    rows.forEach(({ lab_selection, start_time, end_time }) => {
+      labDetails[lab_selection].available = false;
+      labDetails[lab_selection].bookedSlots.push({
+        start: start_time,
+        end: end_time
+      });
+    });
+
+    // Return JSON that your client‑side already knows how to render
+    res.json(labDetails);
+
+  } catch (err) {
+    console.error('Availability fetch error:', err);
+    res.status(500).json({ error: 'Server error fetching availability.' });
+  }
 });
 
 module.exports = router;

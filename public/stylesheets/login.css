@@ -192,3 +192,114 @@ button:hover {
   height: 300px;
   background-color: blue;
 }
+
+/* Media query for responsiveness */
+@media screen and (max-width: 768px) {
+
+  .section1 {
+    display: none !important;
+  }
+
+  .section2 {
+    width: 100%; /* Make the login form take full width */
+    height: auto;
+    padding: 20px;
+    box-shadow: none;
+  }
+
+  .login-container {
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  button {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .forgot-password,
+  .submit-container {
+    margin-left: 0;
+  }
+
+  .info-container {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  .section1 {
+    display: none !important; /* Ensure split screen is hidden */
+  }
+
+  .section2 {
+    width: 100%; /* Ensure the form takes full width */
+    height: auto;
+    padding: 15px;
+    box-shadow: none;
+  }
+
+  h2 {
+    font-size: 1.2em;
+  }
+
+  input, select {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .footer {
+    font-size: 10px;
+    padding: 10px 0;
+  }
+}
+
+@media screen and (max-width: 400px) {
+
+  .section1 {
+    display: none !important; /* Ensure split screen is hidden */
+  }
+
+  .section2 {
+    width: 100%; /* Ensure the form takes full width */
+    height: auto;
+    padding: 10px;
+    box-shadow: none;
+  }
+
+  h2 {
+    font-size: 1em;
+  }
+
+  input, select {
+    font-size: 10px;
+    padding: 8px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .footer {
+    font-size: 8px;
+    padding: 8px 0;
+  }
+
+  .login-container {
+    padding: 10px;
+  }
+
+  .info-container {
+    width: 100%;
+    height: auto;
+    font-size: 10px;
+  }
+}
