@@ -3,20 +3,47 @@
 <head>
     <title>Registration Form</title>    
     <link rel="stylesheet" href="/stylesheets/register.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <script>
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const matchIndicator = document.getElementById('password-match');
+            
+            if (password && confirmPassword) {
+                if (password === confirmPassword) {
+                    matchIndicator.textContent = 'Passwords match!';
+                    matchIndicator.className = 'password-match valid';
+                } else {
+                    matchIndicator.textContent = 'Passwords do not match!';
+                    matchIndicator.className = 'password-match invalid';
+                }
+            } else {
+                matchIndicator.className = 'password-match';
+            }
+        }
+        
         function validateForm(event) {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
 
             if (password !== confirmPassword) {
                 alert('Passwords do not match!');
-                event.preventDefault(); // Prevent form submission
+                event.preventDefault();
+                return false;
             }
+            return true;
         }
+        
+        // Initialize password validation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('password').addEventListener('input', validatePassword);
+            document.getElementById('confirm-password').addEventListener('input', validatePassword);
+        });
     </script>
 </head>
 <body>
-    <section class="left-section">
+    <section class="left-section" style="border: 1px solid black;">
         <header>
             <div class="nav-container">
                 <h1>Laboratory Resource Scheduler</h1>
@@ -25,8 +52,10 @@
                 </ul>
             </div>
         </header>
+        
         <h2>Registration Form</h2>
-        <form action="/register" method="post" onsubmit="validateForm(event)">
+        
+        <form action="/register" method="post" onsubmit="return validateForm(event)">
             <div class="form-group">
                 <label for="student_no">Student Number</label>
                 <input type="text" name="student_no" id="student_no" placeholder="Enter your Student Number" required>
@@ -49,13 +78,20 @@
             </div>
             <div class="form-group">
                 <label for="confirm-password">Confirm Password</label>
-                <input type="password" name="confirmPassword" id="confirm-password" placeholder="Confirm your Password" required>
+                <input type="password" name="confirmPassword" id="confirm-password" 
+                       placeholder="Confirm your Password" required>
+                <div id="password-match" class="password-match"></div>
             </div>            
             <div class="submit-container">
                 <button type="submit">Register</button>
             </div>
-        </form>        
+        </form>
+        
+        <footer>
+            &copy; <%= new Date().getFullYear() %> Laboratory Resource Scheduler
+        </footer>
     </section>
-    <section class="right-section"></section>
+    
+    <section class="right-section" style="border: 1px solid black;" ></section>
 </body>
 </html>

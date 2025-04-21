@@ -3,12 +3,48 @@ const router = express.Router();
 const db = require('../db');
 
 // GET lab booking form
+// GET lab booking form - Updated to include initial availability data
 router.get('/', async function (req, res, next) {
   if (!req.session.user) {
     return res.redirect('/');
   }
 
-  res.render('lab');
+  try {
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Fetch initial availability for today
+    const [rows] = await db.execute(
+      'SELECT lab_selection FROM bookings WHERE booking_date = ?',
+      [today]
+    );
+
+    const initialAvailability = {
+      'Lab 1': true,
+      'Lab 2': true,
+      'Lab 3': true,
+    };
+
+    rows.forEach(row => {
+      initialAvailability[row.lab_selection] = false;
+    });
+
+    res.render('lab', { 
+      initialAvailability,
+      initialDate: today 
+    });
+
+  } catch (error) {
+    console.error('Error loading lab page:', error);
+    res.render('lab', { 
+      initialAvailability: {
+        'Lab 1': true,
+        'Lab 2': true,
+        'Lab 3': true
+      },
+      initialDate: new Date().toISOString().split('T')[0]
+    });
+  }
 });
 
 // POST booking confirmation
@@ -98,38 +134,39 @@ router.post('/', async function (req, res, next) {
 });
 
 // POST route to check for booking conflicts (real-time validation)
-router.post('/check-availability', async (req, res) => {
-  const { lab, booking_date, start_time, end_time } = req.body;
+// GET route to fetch detailed lab availability by date
+router.get('/availability/:date', async (req, res) => {
+  const bookingDate = req.params.date;
 
   try {
-    const query = `
-      SELECT * FROM bookings
-      WHERE lab_selection = ?
-        AND booking_date = ?
-        AND (
-          (start_time < ? AND end_time > ?)
-          OR (start_time < ? AND end_time > ?)
-          OR (start_time >= ? AND end_time <= ?)
-          OR (start_time <= ? AND end_time >= ?)
-        )
-    `;
+    // Get all bookings for the date with time slots
+    const [bookings] = await db.execute(
+      `SELECT lab_selection, start_time, end_time 
+       FROM bookings 
+       WHERE booking_date = ? 
+       ORDER BY lab_selection, start_time`,
+      [bookingDate]
+    );
 
-    const [conflicts] = await db.execute(query, [
-      lab, booking_date,
-      end_time, start_time,
-      end_time, start_time,
-      start_time, end_time,
-      start_time, end_time
-    ]);
+    // Organize by lab
+    const labDetails = {
+      'Lab 1': { available: true, bookedSlots: [] },
+      'Lab 2': { available: true, bookedSlots: [] },
+      'Lab 3': { available: true, bookedSlots: [] }
+    };
 
-    if (conflicts.length > 0) {
-      return res.json({ available: false });
-    }
+    bookings.forEach(booking => {
+      labDetails[booking.lab_selection].available = false;
+      labDetails[booking.lab_selection].bookedSlots.push({
+        start: booking.start_time,
+        end: booking.end_time
+      });
+    });
 
-    res.json({ available: true });
-  } catch (error) {
-    console.error('Conflict check failed:', error);
-    res.status(500).json({ error: 'Server error during conflict check.' });
+    res.json(labDetails);
+  } catch (err) {
+    console.error('Availability fetch error:', err);
+    res.status(500).json({ error: 'Server error fetching availability.' });
   }
 });
 

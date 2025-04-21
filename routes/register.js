@@ -37,12 +37,13 @@ router.post('/', async function (req, res, next) {
     res.redirect('/');
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY') {
-      res.status(400).send('Email or Student Number already exists.');
+      return res.render('register', { alert: 'Email already registered. Select another email' });
     } else {
       console.error(err);
       res.status(500).send('Server error.');
     }
   }
+
 });
 
 module.exports = router;

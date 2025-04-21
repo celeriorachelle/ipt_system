@@ -9,59 +9,80 @@
 
   <nav class="mb-4">
     <ul class="nav">
-      <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
-      <li class="nav-item"><a href="/lab" class="nav-link">Lab</a></li>
-      <li class="nav-item"><a href="/admin" class="nav-link active">Admin</a></li>
-      <li class="nav-item">
-        <a href="/admin/lab-dashboard" class="btn btn-primary nav-link">View Lab Dashboard</a>
+      <li><a href="/lab" class="nav-link">Home</a></li>
+      <li>
+        <a href="/lab/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">Log Out</a>
       </li>
-      <form action="/lab/logout" method="POST" class="d-inline-block ms-2">
-        <button type="submit" class="btn btn-danger">Log Out</button>
-      </form>
+      <form id="logout-form" action="/lab/logout" method="POST" style="display: none;"></form>
     </ul>
   </nav>
 
+  <div class="availability-container">
+    <h3>Lab Availability for <span id="current-date-display"><%= initialDate %></span></h3>
+    <div id="daily-availability">
+      <!-- Will be populated by JavaScript -->
+    </div>
+  </div>
+
   <h2>Lab Booking Form</h2>
-  <form action="/lab/confirm" method="POST">
-    <label>User Type:</label>
-    <input type="text" name="user_type" required><br>
+  <form id="booking-form" action="/lab/confirm" method="POST">
+    <div class="form-group">
+      <label>User Type:</label>
+      <select name="user_type" required>
+        <option value="">-- Select User Type --</option>
+        <option value="Student">Student</option>
+        <option value="Faculty">Faculty</option>
+      </select>
+    </div>
 
-    <label>Section:</label>
-    <input type="text" name="section" required><br>
+    <div class="form-group">
+      <label>Section:</label>
+      <input type="text" name="section" required>
+    </div>
 
-    <label>Subject:</label>
-    <input type="text" name="subject" required><br>
+    <div class="form-group">
+      <label>Subject:</label>
+      <input type="text" name="subject" required>
+    </div>
 
-    <label>Purpose:</label>
-    <input type="text" name="purpose" required><br>
+    <div class="form-group">
+      <label>Purpose:</label>
+      <input type="text" name="purpose" required>
+    </div>
 
-    <label>Lab:</label>
-    <select name="lab" id="lab" required>
-      <option value="">--Select Lab--</option>
-      <option value="Lab 1">Lab 1</option>
-      <option value="Lab 2">Lab 2</option>
-      <option value="Lab 3">Lab 3</option>
-    </select><br>
+    <div class="form-group">
+      <label>Lab:</label>
+      <select name="lab" id="lab" required>
+        <option value="">--Select Lab--</option>
+        <% ['Lab 1', 'Lab 2', 'Lab 3'].forEach(lab => { %>
+          <option value="<%= lab %>">
+            <%= lab %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
 
-    <label>Booking Date:</label>
-    <input type="date" name="booking_date" id="booking_date" required><br>
+    <div class="form-group">
+      <label>Booking Date:</label>
+      <input type="date" name="booking_date" id="booking_date" 
+             value="<%= initialDate %>" min="<%= initialDate %>" required>
+    </div>
 
-    <label>Start Time:</label>
-    <input type="time" name="start_time" id="start_time" required><br>
+    <div class="form-group">
+      <label>Start Time:</label>
+      <input type="time" name="start_time" id="start_time" required>
+    </div>
 
-    <label>End Time:</label>
-    <input type="time" name="end_time" id="end_time" required><br>
+    <div class="form-group">
+      <label>End Time:</label>
+      <input type="time" name="end_time" id="end_time" required>
+    </div>
 
-    <div id="availability-status" style="margin-top:10px; font-weight:bold;"></div>
+    <div id="availability-status"></div>
 
     <button type="submit" id="submit-btn">Proceed to Confirmation</button>
   </form>
 
-  <!-- ✅ Daily lab status -->
-  <h3 style="margin-top: 30px;">Lab Availability for Selected Date</h3>
-  <ul id="daily-availability" style="list-style: none; padding: 0;"></ul>
-
-  <!-- ✅ Real-time validation + Daily availability script -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const labSelect = document.getElementById('lab');
@@ -71,16 +92,66 @@
       const statusDiv = document.getElementById('availability-status');
       const submitBtn = document.getElementById('submit-btn');
       const dailyAvailabilityList = document.getElementById('daily-availability');
+      const currentDateDisplay = document.getElementById('current-date-display');
+      const bookingForm = document.getElementById('booking-form');
 
-      const checkAvailability = async () => {
+      // Format time for display
+      const formatTime = (timeStr) => {
+        if (!timeStr) return '';
+        const [hours, minutes] = timeStr.split(':');
+        const hour = parseInt(hours);
+        return `${hour > 12 ? hour - 12 : hour}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`;
+      };
+
+      // Update the detailed availability display
+      const updateDailyLabStatus = async () => {
+        const date = dateInput.value;
+        if (!date) return;
+
+        currentDateDisplay.textContent = date;
+
+        try {
+          const response = await fetch(`/lab/availability/${date}`);
+          const labDetails = await response.json();
+
+          let html = '';
+          for (const lab in labDetails) {
+            const labInfo = labDetails[lab];
+            html += `
+              <div class="lab-card">
+                <div class="lab-name ${labInfo.available ? 'available' : 'unavailable'}">
+                  ${lab}: ${labInfo.available ? 'Available' : 'Booked'}
+                </div>
+                ${labInfo.bookedSlots.length > 0 ? `
+                  <div class="booked-slots">
+                    Booked times: 
+                    ${labInfo.bookedSlots.map(slot => `
+                      <span class="time-slot">${formatTime(slot.start)} - ${formatTime(slot.end)}</span>
+                    `).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }
+          dailyAvailabilityList.innerHTML = html;
+
+        } catch (err) {
+          console.error('Failed to fetch lab availability:', err);
+          dailyAvailabilityList.innerHTML = '<div style="color: orange;">⚠️ Error loading availability details</div>';
+        }
+      };
+
+      // Check for conflicts when form is submitted
+      bookingForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
         const lab = labSelect.value;
         const booking_date = dateInput.value;
         const start_time = startInput.value;
         const end_time = endInput.value;
 
         if (!lab || !booking_date || !start_time || !end_time) {
-          statusDiv.innerHTML = '';
-          submitBtn.disabled = true;
+          alert('Please fill in all required fields');
           return;
         }
 
@@ -94,59 +165,33 @@
           });
 
           const result = await response.json();
-
+          
           if (result.available) {
-            statusDiv.innerHTML = '✅ Lab is available';
-            statusDiv.style.color = 'green';
-            submitBtn.disabled = false;
+            // If available, submit the form
+            bookingForm.submit();
           } else {
-            statusDiv.innerHTML = '❌ Lab is already booked';
-            statusDiv.style.color = 'red';
-            submitBtn.disabled = true;
+            alert('Laboratory room is already booked for the selected time slot. Please choose a different time.');
           }
         } catch (err) {
           console.error('Error checking availability:', err);
-          statusDiv.innerHTML = '⚠️ Error checking lab availability';
-          statusDiv.style.color = 'orange';
-          submitBtn.disabled = true;
+          alert('Error checking lab availability. Please try again.');
         }
-      };
-
-      const updateDailyLabStatus = async () => {
-        const date = dateInput.value;
-        if (!date) {
-          dailyAvailabilityList.innerHTML = '';
-          return;
-        }
-
-        try {
-          const response = await fetch(`/lab/availability/${date}`);
-          const result = await response.json();
-
-          dailyAvailabilityList.innerHTML = '';
-          for (const lab in result) {
-            const li = document.createElement('li');
-            li.textContent = `${lab}: ${result[lab] ? '✅ Available' : '❌ Booked'}`;
-            li.style.color = result[lab] ? 'green' : 'red';
-            dailyAvailabilityList.appendChild(li);
-          }
-        } catch (err) {
-          console.error('Failed to fetch lab availability:', err);
-          dailyAvailabilityList.innerHTML = '<li style="color: orange;">⚠️ Error loading availability</li>';
-        }
-      };
-
-      [labSelect, dateInput, startInput, endInput].forEach(el => {
-        el.addEventListener('change', () => {
-          checkAvailability();
-          updateDailyLabStatus();
-        });
       });
 
-      // Disable submit by default
-      submitBtn.disabled = true;
+      // Set initial time values (current time + 1 hour)
+      const now = new Date();
+      const startTime = new Date(now.getTime() + 60 * 60 * 1000); // Current time + 1 hour
+      const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // Start time + 1 hour
+
+      startInput.value = `${String(startTime.getHours()).padStart(2, '0')}:${String(startTime.getMinutes()).padStart(2, '0')}`;
+      endInput.value = `${String(endTime.getHours()).padStart(2, '0')}:${String(endTime.getMinutes()).padStart(2, '0')}`;
+
+      // Event listeners
+      dateInput.addEventListener('change', updateDailyLabStatus);
+
+      // Initial load
+      updateDailyLabStatus();
     });
   </script>
-
 </body>
 </html>

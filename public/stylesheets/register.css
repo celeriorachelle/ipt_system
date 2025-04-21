@@ -1,184 +1,56 @@
-/* Reset & base styles */
-* {
-  box-sizing: border-box;
+body {
   margin: 0;
   padding: 0;
+  display: flex;
+  height: 100vh;
+}
+
+.left-section {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.left-section footer {
+  position: fixed;
+  bottom: 0;
+  width: 49%;
+  background-color: #001a5c;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+
+.left-section header {
+  background-color: #001a5c;
+  color: white;
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+header div h1, a {
   font-family: 'Poppins', sans-serif;
 }
 
-body {
-  display: flex;
-  flex-wrap: wrap;
-  height: 100vh;
-  background-color: #fff;
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-/* Left Section (Image) */
-.section1 {
-  flex: 1 1 60%;
-  background: url('/images/cmu3.jpg') no-repeat center center;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  position: relative;
-}
-
-/* Right Section (Form) */
-.section2 {
-  flex: 1 1 40%;
-  background-color: #f6f6f6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.05);
-}
-
-/* Register Form Container */
-.register-container {
-  width: 100%;
-  max-width: 350px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Heading */
-h2 {
-  font-size: 1.5em;
-  font-weight: bold;
-  text-align: center;
-  color: #001a5c;
-  font-family: 'Times New Roman', Times, serif;
-  margin-bottom: 15px;
-}
-
-/* Form Group */
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-size: 14px;
-  color: #001a5c;
-  margin-bottom: 5px;
-}
-
-/* Input and Select Styling */
-input,
-select {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-input:focus,
-select:focus {
-  border-color: #001a5c;
-  box-shadow: 0 0 8px rgba(2, 1, 49, 0.781);
-}
-
-/* Custom Select Dropdown */
-select {
-  appearance: none;
-  text-align: center;
-  background: white url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22 viewBox%3D%220 0 4 5%22%3E%3Cpath fill%3D%22%23001a5c%22 d%3D%22M2 0L0 2h4z%22/%3E%3C/svg%3E') no-repeat right 10px center;
-  background-size: 10px 10px;
-  text-align-last: center;
-}
-
-select option {
-  text-align: center;
-}
-
-/* Submit Button */
-button {
-  width: 40%;
-  margin: 20px auto 0;
-  padding: 12px;
-  background-color: #001a5c;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
-}
-
-button:hover {
-  background-color: rgb(13, 2, 43);
-}
-
-/* Links and Info */
-.forgot-password,
-.submit-container {
-  text-align: center;
-  margin-top: 10px;
-}
-
-.forgot-password a,
-.submit-container a {
-  color: #001a5c;
+header div ul a {
   text-decoration: none;
-  font-size: 12px;
-  transition: color 0.3s ease-in-out;
-}
-
-.forgot-password a:hover,
-.submit-container a:hover {
-  text-decoration: underline;
-}
-
-/* Footer */
-.footer {
-  width: 100%;
-  background-color: #001a5c;
   color: white;
-  text-align: center;
-  padding: 10px 0;
-  font-size: 12px;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  bottom: 0;
 }
 
-.footer a {
-  color: #66b2ff;
-  text-decoration: none;
-  margin-left: 8px;
+.left-section form {
+  border: 1px solid black;
 }
 
-.footer a:hover {
-  text-decoration: underline;
-}
-
-/* Responsive Design */
-@media (max-width: 900px) {
-  body {
-    flex-direction: column;
-  }
-
-  .section1,
-  .section2 {
-    width: 100%;
-    height: auto;
-  }
-
-  .register-container {
-    max-width: 100%;
-    padding: 20px;
-  }
-
-  button {
-    width: 100%;
-  }
+.right-section {
+  width: 50%;
+  background-color: #a1a1a1;
 }
