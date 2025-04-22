@@ -5,20 +5,21 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const db = require('./db');
+const session = require('express-session');  
 
 // CORS setup
 const cors = require('cors');  // Import CORS package
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const labRouter = require('./routes/lab');           // 💡 student/faculty bookings & lab dashboard
+const labRouter = require('./routes/lab');
 const registerRouter = require('./routes/register');
 const forgotRouter = require('./routes/forgot');
 const otpRouter = require('./routes/otp');
-const adminRouter = require('./routes/admin');       // 💡 admin dashboard & lab updates
+const adminRouter = require('./routes/admin');
 const adminpassRouter = require('./routes/admin-password');
 const checkRole = require('./middlewares/checkRole');
-
+const sessionTimeout = require('./middlewares/sessionTimeout');
 
 const app = express();
 
@@ -36,23 +37,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 // CORS setup
 app.use(cors());  // Enable CORS for all origins
 
-// Session
-const session = require('express-session');
+// Session middleware
 app.use(session({
   secret: 'lab_scheduler_key123',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: { 
+    secure: false,
+    maxAge: 30000 // 30 seconds in milliseconds
+  },
+  rolling: true // Reset timer on activity
 }));
+
+app.use(sessionTimeout);
+
 
 // Route setup
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/lab', labRouter);               // 👈 student/faculty use this route
+app.use('/lab', labRouter);
 app.use('/register', registerRouter);
 app.use('/forgot', forgotRouter);
 app.use('/otp', otpRouter);
-app.use('/admin', adminRouter);           // 👈 admin-exclusive
+app.use('/admin', adminRouter);
 app.use('/admin-password', adminpassRouter);
 app.use('/checkRole', checkRole);
 

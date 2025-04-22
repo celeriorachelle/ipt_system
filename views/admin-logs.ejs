@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Add jQuery first -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- Fix the closing tag here -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
+  <title>Admin Logs</title>
+  <style>
+    /* Add some basic styling */
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+    .logs-table { width: 100%; border-collapse: collapse; }
+    .logs-table th, .logs-table td { padding: 8px; border: 1px solid #ddd; }
+    .btn-back, .btn-logout { padding: 8px 16px; background: #f0f0f0; border-radius: 4px; }
+  </style>
+</head>
+<body>
+    <header>
+        <div class="back-btn-container">
+            <a href="/admin" class="btn-back" style="text-decoration: none; color: black;">Back to Dashboard</a>
+          </div>
+        <div class="logout-container">
+          <form action="/admin/logout" method="POST">
+            <button type="submit" class="btn-logout">Log Out</button>
+          </form>
+        </div>
+    </header>
+
+    <h1>Admin Logs</h1>
+  <!-- Admin Logs Section -->
+  <section class="logs-section">
+    <h2>Admin Activity Logs</h2>
+    <% if (logs.length > 0) { %>
+      <table id="adminLogsTable" class="logs-table display">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Admin Action</th>
+            <th>Record ID</th>
+            <th>Action Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logs.forEach(log => { %>
+            <tr>
+              <td><%= new Date(log.timestamp).toLocaleString() %></td>
+              <td><%= log.admin_action %></td>
+              <td><%= log.record_id %></td>
+              <td><%= log.action_details %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No logs found.</p>
+    <% } %>
+  </section>
+  
+  <!-- Load DataTables JS after jQuery -->
+  <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+  <!-- Initialize DataTables -->
+  <script>
+      let timeout;
+        let warningTimeout;
+        let warningDisplayed = false;
+
+        const showWarning = () => {
+            if (!warningDisplayed) {
+            const warning = document.getElementById('inactivity-warning');
+            warning.style.display = 'block';
+            warningDisplayed = true;
+            }
+        };
+
+        const resetTimer = () => {
+            clearTimeout(timeout);
+            clearTimeout(warningTimeout);
+
+            const warning = document.getElementById('inactivity-warning');
+            if (warning && warning.style.display === 'block') {
+                warning.style.display = 'none';
+            }
+
+            warningDisplayed = false;
+
+            // Warning after 15 seconds
+            warningTimeout = setTimeout(showWarning, 15000);
+
+            // Auto-logout after 30 seconds
+            timeout = setTimeout(() => {
+            fetch('/admin/session-check')
+                .then(response => {
+                if (response.status === 200) {
+                    resetTimer();
+                } else {
+                    window.location.href = '/';
+                }
+                })
+                .catch(() => {
+                window.location.href = '/';
+                });
+            }, 30000);
+        };
+
+        const activityEvents = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];
+        activityEvents.forEach(event => {
+            window.addEventListener(event, resetTimer);
+        });
+
+        resetTimer();
+
+    $(document).ready(function() {
+      $('#adminLogsTable').DataTable({
+        order: [[0, 'desc']], // Sort by timestamp (first column) in descending order
+        pageLength: 10,       // Show 10 entries per page
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        responsive: true
+      });
+    });
+  </script>
+  <div id="inactivity-warning" style="display: none; position: fixed; bottom: 20px; right: 20px; background: #f8d7da; color: #721c24; padding: 15px 20px; border: 1px solid #f5c6cb; border-radius: 8px; font-weight: bold;">
+    ⚠️ You have been inactive for 15 seconds. You will be logged out soon.
+  </div>
+</body>
+</html>

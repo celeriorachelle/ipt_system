@@ -4,12 +4,15 @@
     <title>Registration Form</title>    
     <link rel="stylesheet" href="/stylesheets/register.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
         function validatePassword() {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
             const matchIndicator = document.getElementById('password-match');
+            const strengthIndicator = document.getElementById('password-strength');
             
+            // Password match validation
             if (password && confirmPassword) {
                 if (password === confirmPassword) {
                     matchIndicator.textContent = 'Passwords match!';
@@ -21,17 +24,86 @@
             } else {
                 matchIndicator.className = 'password-match';
             }
+            
+            // Password strength validation
+            if (password) {
+                const strength = checkPasswordStrength(password);
+                updateStrengthIndicator(strength, strengthIndicator);
+            } else {
+                strengthIndicator.textContent = '';
+                strengthIndicator.className = 'password-strength';
+            }
+        }
+        
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            
+            // Character variety checks
+            if (/[A-Z]/.test(password)) strength++; // Uppercase
+            if (/[a-z]/.test(password)) strength++; // Lowercase
+            if (/\d/.test(password)) strength++;    // Numbers
+            if (/[^A-Za-z0-9]/.test(password)) strength++; // Special chars
+            
+            return Math.min(strength, 5); // Cap at 5 for our meter
+        }
+        
+        function updateStrengthIndicator(strength, indicator) {
+            const messages = [
+                'Very Weak',
+                'Weak',
+                'Moderate',
+                'Strong',
+                'Very Strong'
+            ];
+            const colors = [
+                'red',
+                'orangered',
+                'orange',
+                'yellowgreen',
+                'green'
+            ];
+            
+            indicator.textContent = `Strength: ${messages[strength-1]}`;
+            indicator.className = `password-strength strength-${strength}`;
+            indicator.style.color = colors[strength-1];
+        }
+        
+        function togglePasswordVisibility(fieldId, iconId) {
+            const field = document.getElementById(fieldId);
+            const icon = document.getElementById(iconId);
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
         }
         
         function validateForm(event) {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
+            const strength = checkPasswordStrength(password);
 
             if (password !== confirmPassword) {
                 alert('Passwords do not match!');
                 event.preventDefault();
                 return false;
             }
+            
+            if (strength < 3) { // Require at least "Moderate" strength
+                alert('Password is too weak! Please use a stronger password.');
+                event.preventDefault();
+                return false;
+            }
+            
             return true;
         }
         
@@ -55,32 +127,65 @@
         
         <h2>Registration Form</h2>
         
+        <% if (typeof alert !== 'undefined' && alert) { %>
+            <div class="alert"><%= alert %></div>
+        <% } %>
+        
         <form action="/register" method="post" onsubmit="return validateForm(event)">
             <div class="form-group">
                 <label for="student_no">Student Number</label>
-                <input type="text" name="student_no" id="student_no" placeholder="Enter your Student Number" required>
+                <input type="text" name="student_no" id="student_no" 
+                       value="<%= formData && formData.student_no ? formData.student_no : '' %>" 
+                       placeholder="Enter your Student Number" required>
             </div>            
             <div class="form-group">
                 <label for="firstname">First Name</label>
-                <input type="text" name="firstname" id="firstname" placeholder="Enter your First Name" required>
+                <input type="text" name="firstname" id="firstname" 
+                       value="<%= formData && formData.firstname ? formData.firstname : '' %>" 
+                       placeholder="Enter your First Name" required>
             </div>
             <div class="form-group">
                 <label for="lastname">Last Name</label>
-                <input type="text" name="lastname" id="lastname" placeholder="Enter your Last Name" required>
+                <input type="text" name="lastname" id="lastname" 
+                       value="<%= formData && formData.lastname ? formData.lastname : '' %>" 
+                       placeholder="Enter your Last Name" required>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email" placeholder="Enter your Email" required>
+                <input type="email" name="email" id="email" 
+                       value="<%= formData && formData.email ? formData.email : '' %>" 
+                       placeholder="Enter your Email" required>
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="Enter your Password" required>
+                <label for="password">Password (min 8 chars with uppercase, lowercase, number, and special character)</label>
+                <div class="password-input-container">
+                    <input type="password" name="password" id="password" placeholder="Enter your Password" required>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('password', 'toggle-password-icon')">
+                        <i id="toggle-password-icon" class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <div id="password-strength" class="password-strength"></div>
             </div>
             <div class="form-group">
                 <label for="confirm-password">Confirm Password</label>
-                <input type="password" name="confirmPassword" id="confirm-password" 
-                       placeholder="Confirm your Password" required>
+                <div class="password-input-container">
+                    <input type="password" name="confirmPassword" id="confirm-password" 
+                           placeholder="Confirm your Password" required>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('confirm-password', 'toggle-confirm-password-icon')">
+                        <i id="toggle-confirm-password-icon" class="fas fa-eye"></i>
+                    </span>
+                </div>
                 <div id="password-match" class="password-match"></div>
+                
+                <% if (typeof passwordErrors !== 'undefined' && passwordErrors) { %>
+                  <div class="password-errors">
+                    <ul>
+                      <% passwordErrors.forEach(error => { %>
+                        <li><%= error %></li>
+                      <% }); %>
+                    </ul>
+                  </div>
+                <% } %>
             </div>            
             <div class="submit-container">
                 <button type="submit">Register</button>
@@ -92,6 +197,6 @@
         </footer>
     </section>
     
-    <section class="right-section" style="border: 1px solid black;" ></section>
+    <section class="right-section" style="border: 1px solid black;"></section>
 </body>
 </html>

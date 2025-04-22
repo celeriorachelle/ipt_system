@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../db');
 
 // GET admin password page
 router.get('/', (req, res) => {
@@ -7,12 +8,13 @@ router.get('/', (req, res) => {
 });
 
 // POST admin password form
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const enteredPass = req.body.adminPassword;
   const actualPass = process.env.ADMIN_PASS;
 
   if (enteredPass === actualPass && req.session.adminLogin) {
     req.session.isAdmin = true;
+
     return res.redirect('/admin');
   }
 

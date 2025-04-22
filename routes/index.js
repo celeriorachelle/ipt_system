@@ -81,7 +81,9 @@ router.post('/admin-password', (req, res) => {
   const actualPass = process.env.ADMIN_PASS;
 
   if (enteredPass === actualPass && req.session.adminLogin) {
+    // After successful admin login
     req.session.isAdmin = true;
+    req.session.lastActivity = Date.now();
     return res.redirect('/admin');
   }
 

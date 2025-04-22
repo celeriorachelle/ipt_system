@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
+router.use((req, res, next) => {
+  // Set last activity time on every admin route access
+  req.session.lastActivity = Date.now();
+  next();
+});
+
 // Admin dashboard route (GET) - Now only shows bookings
 router.get('/', async (req, res) => {
   try {
@@ -23,10 +29,16 @@ router.get('/', async (req, res) => {
       ORDER BY booking_date DESC, start_time DESC
     `);
 
+      // Log admin login
+      await db.execute(
+        'INSERT INTO admin_logs (admin_action, record_id, action_details) VALUES (?, ?, ?)',
+        ['Login', null, 'Admin successfully logged in']
+      );
+
     res.render('admin', { bookings });
   } catch (error) {
     console.error('Error fetching bookings:', error);
-    res.status(500).send('Error loading admin dashboard.');
+    res.status(500).send('<script>alert("Error loading admin dashboard. Please try again."); window.location.href="/admin";</script>');
   }
 });
 
@@ -62,20 +74,38 @@ router.post('/add-booking', async (req, res) => {
       start_time, 
       end_time
     ]);
+
+    // Log the addition
+    await db.execute(
+      'INSERT INTO admin_logs (admin_action, record_id, action_details) VALUES (?, ?, ?)',
+      ['Add', null, `New booking added for ${student_booking_number} on ${booking_date} (${start_time} - ${end_time}) in ${lab_selection}`]
+    );    
+
     res.redirect('/admin');
   } catch (error) {
     console.error('Error adding new booking:', error);
-    res.status(500).send('Failed to add booking.');
+    res.status(500).send('<script>alert("The student/faculty number is not yet registered. Please try again."); window.location.href="/admin";</script>');
   }
 });
+
 
 // DELETE: Delete booking record (POST)
 router.post('/delete-booking', async (req, res) => {
   const { id } = req.body;
 
   try {
+    // Fetch the student_booking_number before deletion
+    const [rows] = await db.execute('SELECT student_booking_number FROM bookings WHERE booking_id = ?', [id]);
+    const studentBookingNumber = rows.length > 0 ? rows[0].student_booking_number : 'Unknown';
+
     const query = 'DELETE FROM bookings WHERE booking_id = ?';
     await db.execute(query, [id]);
+
+    await db.execute(
+      'INSERT INTO admin_logs (admin_action, record_id, action_details) VALUES (?, ?, ?)',
+      ['Delete', id, `Booking record for ${studentBookingNumber} was deleted by admin`]
+    );
+        
     res.redirect('/admin');
   } catch (error) {
     console.error('Error deleting booking record:', error);
@@ -83,16 +113,42 @@ router.post('/delete-booking', async (req, res) => {
   }
 });
 
-router.post('/logout', function (req, res, next) {
-  req.session.destroy(function (err) {
-    if (err) {
-      console.error('Logout error:', err);
-      return next(err);
-    }
-    // Clear the session cookie
+// Admin logs page
+router.get('/logs', async function(req, res) {
+  // Check if user is admin
+  if (!req.session.isAdmin) {
+    return res.redirect('/admin');
+  }
+  
+  try {
+    // Reset activity timer
+    req.session.lastActivity = Date.now();
+    
+    // Fetch logs from database
+    const [logs] = await db.execute(
+      'SELECT * FROM admin_logs ORDER BY timestamp DESC'
+    );
+    
+    res.render('admin-logs', { logs });
+  } catch (error) {
+    console.error('Error fetching admin logs:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+
+router.post('/logout', function(req, res) {
+  req.session.destroy(() => {
     res.clearCookie('connect.sid');
     res.redirect('/');
   });
+});
+
+router.get('/session-check', (req, res) => {
+  if (!req.session.isAdmin) {
+    return res.sendStatus(401);
+  }
+  res.sendStatus(200);
 });
 
 module.exports = router;

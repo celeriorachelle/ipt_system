@@ -10,13 +10,15 @@
 
   <header>
     <h1>Admin Bookings Management Dashboard</h1>
-    <div class="logout-container">
+    <div class="header-actions">
+      <a href="/admin/logs" class="btn-log">View Logs</a>
       <form action="/admin/logout" method="POST">
         <button type="submit" class="btn-logout">Log Out</button>
       </form>
     </div>
   </header>
   
+
   <!-- Bookings Section -->
   <section class="bookings-section">
     <h2>Current Bookings</h2>
@@ -128,6 +130,60 @@
       <button type="submit" class="btn-add">Add Booking</button>
     </form>
   </section>
+  <script>
+    let timeout;
+    let warningTimeout;
+    let warningDisplayed = false;
+  
+    const showWarning = () => {
+      if (!warningDisplayed) {
+        const warning = document.getElementById('inactivity-warning');
+        warning.style.display = 'block';
+        warningDisplayed = true;
+      }
+    };
 
+  
+    const resetTimer = () => {
+      clearTimeout(timeout);
+      clearTimeout(warningTimeout);
+
+      const warning = document.getElementById('inactivity-warning');
+      if (warning && warning.style.display === 'block') {
+        warning.style.display = 'none';
+      }
+
+      warningDisplayed = false;
+  
+      // Warning after 15 seconds
+      warningTimeout = setTimeout(showWarning, 15000);
+  
+      // Auto-logout after 30 seconds
+      timeout = setTimeout(() => {
+        fetch('/admin/session-check')
+          .then(response => {
+            if (response.status === 200) {
+              resetTimer();
+            } else {
+              window.location.href = '/';
+            }
+          })
+          .catch(() => {
+            window.location.href = '/';
+          });
+      }, 30000);
+    };
+  
+    const activityEvents = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];
+    activityEvents.forEach(event => {
+      window.addEventListener(event, resetTimer);
+    });
+  
+    resetTimer();
+  </script>
+<div id="inactivity-warning" style="display: none; position: fixed; bottom: 20px; right: 20px; background: #f8d7da; color: #721c24; padding: 15px 20px; border: 1px solid #f5c6cb; border-radius: 8px; font-weight: bold;">
+  ⚠️ You have been inactive for 15 seconds. You will be logged out soon.
+</div>
+  
 </body>
 </html>
