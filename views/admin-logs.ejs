@@ -7,21 +7,15 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <!-- Fix the closing tag here -->
   <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="/stylesheets/admin-log.css">
   <title>Admin Logs</title>
-  <style>
-    /* Add some basic styling */
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    header { display: flex; justify-content: space-between; margin-bottom: 20px; }
-    .logs-table { width: 100%; border-collapse: collapse; }
-    .logs-table th, .logs-table td { padding: 8px; border: 1px solid #ddd; }
-    .btn-back, .btn-logout { padding: 8px 16px; background: #f0f0f0; border-radius: 4px; }
-  </style>
 </head>
 <body>
     <header>
         <div class="back-btn-container">
-            <a href="/admin" class="btn-back" style="text-decoration: none; color: black;">Back to Dashboard</a>
-          </div>
+            <a href="/admin" class="btn-back">Back to Dashboard</a>
+        </div>
         <div class="logout-container">
           <form action="/admin/logout" method="POST">
             <button type="submit" class="btn-logout">Log Out</button>
@@ -121,7 +115,7 @@
       });
     });
   </script>
-  <div id="inactivity-warning" style="display: none; position: fixed; bottom: 20px; right: 20px; background: #f8d7da; color: #721c24; padding: 15px 20px; border: 1px solid #f5c6cb; border-radius: 8px; font-weight: bold;">
+  <div id="inactivity-warning">
     ⚠️ You have been inactive for 15 seconds. You will be logged out soon.
   </div>
 </body>

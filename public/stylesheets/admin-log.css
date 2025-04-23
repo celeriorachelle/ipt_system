@@ -1,0 +1,160 @@
+/* General Body Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f7fa;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* Header Layout - Removed margin */
+header {
+  background-color: #1f3c6e;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* Container for Right-aligned Header Buttons */
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Log Out and Back Buttons */
+.btn-logout,
+.btn-back {
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background-color 0.3s;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.btn-logout {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-logout:hover {
+  background-color: #c82333;
+}
+
+.btn-back {
+  background-color: #f0f0f0;
+  color: black;
+}
+
+.btn-back:hover {
+  background-color: #e0e0e0;
+}
+
+/* Page Title Styling */
+h1 {
+  margin: 20px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #333;
+}
+
+h2 {
+  text-align: left;
+  margin: 20px 0;
+  font-size: 22px;
+  color: #333;
+  padding: 0 20px;
+}
+
+/* Logs Section */
+.logs-section {
+  padding: 0 20px;
+}
+
+/* Table Styles - preserving the original layout */
+.logs-table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.logs-table th, .logs-table td { 
+  padding: 8px; 
+  border: 1px solid #ddd; 
+  text-align: left;
+}
+
+.logs-table th {
+  background-color: #1f3c6e;
+  color: white;
+  font-weight: 500;
+}
+
+.logs-table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.logs-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* DataTables specific styling */
+.dataTables_wrapper .dataTables_filter {
+  margin-bottom: 15px;
+}
+
+/* Inactivity Warning */
+#inactivity-warning {
+  display: none; 
+  position: fixed; 
+  bottom: 20px; 
+  right: 20px; 
+  background: #f8d7da; 
+  color: #721c24; 
+  padding: 15px 20px; 
+  border: 1px solid #f5c6cb; 
+  border-radius: 8px; 
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    margin-top: 15px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  h1, h2 {
+    font-size: 20px;
+  }
+
+  .logs-table th,
+  .logs-table td {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
