@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Course Entry</title>
+  <style>
+    .course-row { margin-bottom: .5em; }
+    .course-row input, .course-row select { margin-right: .3em; }
+  </style>
+  <script>
+    function addCourse() {
+      const container = document.getElementById('courses');
+      const row = document.createElement('div');
+      row.className = 'course-row';
+      row.innerHTML = `
+        <input name="section[]"      placeholder="Section"      required>
+        <input name="course_name[]"   placeholder="Course Name"  required>
+        <select name="schedule_day[]" required>
+          <option value="">Day</option>
+          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+          <option>Thursday</option><option>Friday</option><option>Saturday</option>
+        </select>
+        <input type="time" name="start_time[]" required>
+        <input type="time" name="end_time[]"   required>
+        <button type="button" onclick="this.parentNode.remove()">✕</button>
+      `;
+      container.appendChild(row);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('add-btn').addEventListener('click', addCourse);
+    });
+  </script>
+</head>
+<body>
+  <h2>Enter Your Courses</h2>
+  <form action="/course-form" method="POST">
+    <div id="courses">
+      <div class="course-row">
+        <input name="section[]"      placeholder="Section"      required>
+        <input name="course_name[]"   placeholder="Course Name"  required>
+        <select name="schedule_day[]" required>
+          <option value="">Day</option>
+          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+          <option>Thursday</option><option>Friday</option><option>Saturday</option>
+        </select>
+        <input type="time" name="start_time[]" required>
+        <input type="time" name="end_time[]"   required>
+      </div>
+    </div>
+    <button type="button" id="add-btn">+ Add Another Course</button>
+    <button type="submit">Submit Courses</button>
+  </form>
+</body>
+</html>

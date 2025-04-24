@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../db');
 
 // GET lab booking form
-// GET lab booking form - Updated to include initial availability data
 router.get('/', async function (req, res, next) {
   if (!req.session.user) {
     return res.redirect('/');
@@ -60,18 +59,47 @@ router.post('/confirm', async function (req, res, next) {
     end_time
   } = req.body;
 
-  req.session.bookingData = {
-    user_type,
-    section,
-    subject,
-    purpose,
-    lab,
-    booking_date,
-    start_time,
-    end_time
-  };
+  const student_number = req.session.user?.student_number;
+  if (!student_number) {
+    return res.redirect('/');
+  }
 
-  res.render('confirm', { booking: req.session.bookingData });
+  try {
+    const [validCourse] = await db.execute(
+      `SELECT * FROM courses
+       WHERE student_number = ?
+         AND schedule_day = DAYNAME(?)
+         AND TIME(start_time) <= TIME(?)
+         AND TIME(end_time) >= TIME(?)`,
+      [student_number, booking_date, start_time, end_time]
+    );
+
+    if (validCourse.length === 0) {
+      return res.send(`
+      <script>
+        alert("⛔ Booking Not Allowed: Your selected time (${start_time} - ${end_time}) on ${booking_date} does not match any of your registered course schedules.");
+        window.location.href = "/lab";
+      </script>
+      `);
+    }
+
+    req.session.bookingData = {
+      user_type,
+      section,
+      subject,
+      purpose,
+      lab,
+      booking_date,
+      start_time,
+      end_time
+    };
+
+    res.render('confirm', { booking: req.session.bookingData });
+
+  } catch (err) {
+    console.error('Course check error:', err);
+    res.status(500).send('Internal server error during course schedule check.');
+  }
 });
 
 // POST final booking submission

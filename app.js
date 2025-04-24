@@ -20,6 +20,7 @@ const adminRouter = require('./routes/admin');
 const adminpassRouter = require('./routes/admin-password');
 const checkRole = require('./middlewares/checkRole');
 const sessionTimeout = require('./middlewares/sessionTimeout');
+const courseFormRouter = require('./routes/course-form');
 
 const app = express();
 
@@ -30,9 +31,10 @@ app.set('view engine', 'ejs');
 // Middleware
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
+
 
 // CORS setup
 app.use(cors());  // Enable CORS for all origins
@@ -42,11 +44,11 @@ app.use(session({
   secret: 'lab_scheduler_key123',
   resave: false,
   saveUninitialized: true,
-  cookie: { 
+  cookie: {
     secure: false,
-    maxAge: 30000 // 30 seconds in milliseconds
+    maxAge: 1000 * 60 * 15   // 15 minutes
   },
-  rolling: true // Reset timer on activity
+  rolling: true
 }));
 
 app.use(sessionTimeout);
@@ -62,6 +64,7 @@ app.use('/otp', otpRouter);
 app.use('/admin', adminRouter);
 app.use('/admin-password', adminpassRouter);
 app.use('/checkRole', checkRole);
+app.use('/course-form', courseFormRouter);
 
 
 // Catch 404
