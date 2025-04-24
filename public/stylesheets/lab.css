@@ -1,4 +1,4 @@
-/* General Body Styles */
+
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #f4f7fa;
@@ -8,10 +8,24 @@ body {
 
 h2 {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 20px;
   font-size: 24px;
   color: #1f3c6e;
+
+ 
 }
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background-color: #1f3c6e;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+} 
 
 form {
   max-width: 600px;
@@ -20,6 +34,7 @@ form {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
 }
 
 label {
@@ -98,6 +113,7 @@ a {
   padding: 15px;
   border-radius: 5px;
   margin-bottom: 20px;
+  margin-top: 60px;
 }
 .lab-card {
   margin-bottom: 15px;

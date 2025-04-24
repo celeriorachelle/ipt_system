@@ -21,7 +21,7 @@
 
   <!-- Bookings Section -->
   <section class="bookings-section">
-    <h2>Current Bookings</h2>
+    <h2 style="margin-top: 100px;">Current Bookings</h2>
     <% if (bookings.length > 0) { %>
       <table class="booking-table">
         <thead>
@@ -155,10 +155,10 @@
 
       warningDisplayed = false;
   
-      // Warning after 15 seconds
-      warningTimeout = setTimeout(showWarning, 30000);
-  
-      // Auto-logout after 30 seconds
+      // Show warning after 14 minutes (840,000 ms)
+      warningTimeout = setTimeout(showWarning, 1000 * 60 * 14);
+
+      // Auto logout after 15 minutes (900,000 ms)
       timeout = setTimeout(() => {
         fetch('/admin/session-check')
           .then(response => {
@@ -171,7 +171,8 @@
           .catch(() => {
             window.location.href = '/';
           });
-      }, 30000);
+      }, 1000 * 60 * 15);
+
     };
   
     const activityEvents = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];

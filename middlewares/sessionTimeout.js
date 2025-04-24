@@ -5,7 +5,7 @@ module.exports = function(req, res, next) {
 
   const now = Date.now();
 
-  if (req.session.lastActivity && now - req.session.lastActivity > 30000) {
+  if (req.session.lastActivity && now - req.session.lastActivity > 900000) {
     console.log('Session expired due to inactivity');
     req.session.destroy(err => {
       if (err) console.error('Error destroying session:', err);

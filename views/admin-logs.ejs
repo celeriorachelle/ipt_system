@@ -70,34 +70,35 @@
         };
 
         const resetTimer = () => {
-            clearTimeout(timeout);
-            clearTimeout(warningTimeout);
+      clearTimeout(timeout);
+      clearTimeout(warningTimeout);
 
-            const warning = document.getElementById('inactivity-warning');
-            if (warning && warning.style.display === 'block') {
-                warning.style.display = 'none';
+      const warning = document.getElementById('inactivity-warning');
+      if (warning && warning.style.display === 'block') {
+        warning.style.display = 'none';
+      }
+
+      warningDisplayed = false;
+  
+      // Show warning after 14 minutes (840,000 ms)
+      warningTimeout = setTimeout(showWarning, 1000 * 60 * 14);
+
+      // Auto logout after 15 minutes (900,000 ms)
+      timeout = setTimeout(() => {
+        fetch('/admin/session-check')
+          .then(response => {
+            if (response.status === 200) {
+              resetTimer();
+            } else {
+              window.location.href = '/';
             }
+          })
+          .catch(() => {
+            window.location.href = '/';
+          });
+      }, 1000 * 60 * 15);
 
-            warningDisplayed = false;
-
-            // Warning after 15 seconds
-            warningTimeout = setTimeout(showWarning, 15000);
-
-            // Auto-logout after 30 seconds
-            timeout = setTimeout(() => {
-            fetch('/admin/session-check')
-                .then(response => {
-                if (response.status === 200) {
-                    resetTimer();
-                } else {
-                    window.location.href = '/';
-                }
-                })
-                .catch(() => {
-                window.location.href = '/';
-                });
-            }, 30000);
-        };
+    };
 
         const activityEvents = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];
         activityEvents.forEach(event => {

@@ -22,11 +22,10 @@ section.left-section {
 section.right-section {
   width: 40%;
   height: 100%;
-  background: url('/images/cmu3.jpg') no-repeat center center;
+  background: url('/images/cmu2.webp') no-repeat center;
   background-size: cover;
 }
 
-/* Header styling */
 section.left-section header {
   background-color: #001a5c;
   position: sticky;
@@ -46,7 +45,7 @@ section.left-section header {
 
 .nav-container h1 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 20px;
   font-weight: 600;
 }
 
@@ -72,7 +71,6 @@ section.left-section header {
   opacity: 0.8;
 }
 
-/* Form title */
 h2 {
   text-align: center;
   color: #001a5c;

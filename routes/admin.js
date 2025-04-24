@@ -29,12 +29,6 @@ router.get('/', async (req, res) => {
       ORDER BY booking_date DESC, start_time DESC
     `);
 
-      // Log admin login
-      await db.execute(
-        'INSERT INTO admin_logs (admin_action, record_id, action_details) VALUES (?, ?, ?)',
-        ['Login', null, 'Admin successfully logged in']
-      );
-
     res.render('admin', { bookings });
   } catch (error) {
     console.error('Error fetching bookings:', error);
