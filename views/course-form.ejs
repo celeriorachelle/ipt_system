@@ -8,48 +8,53 @@
     .course-row input, .course-row select { margin-right: .3em; }
   </style>
   <script>
-    function addCourse() {
+    function addCourse(course_id = '', section = '', course_name = '', schedule_day = '', start_time = '', end_time = '') {
       const container = document.getElementById('courses');
       const row = document.createElement('div');
       row.className = 'course-row';
       row.innerHTML = `
-        <input name="section[]"      placeholder="Section"      required>
-        <input name="course_name[]"   placeholder="Course Name"  required>
+        <input type="hidden" name="course_id[]" value="${course_id}">
+        <input name="section[]" placeholder="Section" value="${section}" required>
+        <input name="course_name[]" placeholder="Course Name" value="${course_name}" required>
         <select name="schedule_day[]" required>
           <option value="">Day</option>
-          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-          <option>Thursday</option><option>Friday</option><option>Saturday</option>
+          <option value="Monday" ${schedule_day === 'Monday' ? 'selected' : ''}>Monday</option>
+          <option value="Tuesday" ${schedule_day === 'Tuesday' ? 'selected' : ''}>Tuesday</option>
+          <option value="Wednesday" ${schedule_day === 'Wednesday' ? 'selected' : ''}>Wednesday</option>
+          <option value="Thursday" ${schedule_day === 'Thursday' ? 'selected' : ''}>Thursday</option>
+          <option value="Friday" ${schedule_day === 'Friday' ? 'selected' : ''}>Friday</option>
+          <option value="Saturday" ${schedule_day === 'Saturday' ? 'selected' : ''}>Saturday</option>
         </select>
-        <input type="time" name="start_time[]" required>
-        <input type="time" name="end_time[]"   required>
+        <input type="time" name="start_time[]" value="${start_time}" required>
+        <input type="time" name="end_time[]" value="${end_time}" required>
         <button type="button" onclick="this.parentNode.remove()">✕</button>
       `;
       container.appendChild(row);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('add-btn').addEventListener('click', addCourse);
+      const courses = JSON.parse('<%- JSON.stringify(courses || []) %>');
+
+      if (courses.length > 0) {
+        courses.forEach(c => {
+          addCourse(c.course_id, c.section, c.course_name, c.schedule_day, c.start_time, c.end_time);
+        });
+      } else {
+        addCourse();
+      }
+
+      document.getElementById('add-btn').addEventListener('click', () => addCourse());
     });
-  </script>
+</script>
 </head>
 <body>
   <h2>Enter Your Courses</h2>
   <form action="/course-form" method="POST">
     <div id="courses">
-      <div class="course-row">
-        <input name="section[]"      placeholder="Section"      required>
-        <input name="course_name[]"   placeholder="Course Name"  required>
-        <select name="schedule_day[]" required>
-          <option value="">Day</option>
-          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-          <option>Thursday</option><option>Friday</option><option>Saturday</option>
-        </select>
-        <input type="time" name="start_time[]" required>
-        <input type="time" name="end_time[]"   required>
-      </div>
+      <!-- Courses will be dynamically inserted here -->
     </div>
     <button type="button" id="add-btn">+ Add Another Course</button>
-    <button type="submit">Submit Courses</button>
+    <button type="submit">Save Courses</button>
   </form>
 </body>
 </html>
