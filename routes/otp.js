@@ -38,8 +38,11 @@ router.post('/', async function(req, res) {
       [student_number]
     );
 
-    // Set the actual user session
+    // Set user session
     req.session.user = { student_number, email };
+    
+    // Store student_number separately for easier access
+    req.session.student_number = student_number;
 
     // Clear temp session data
     delete req.session.otpSecret;
@@ -47,10 +50,7 @@ router.post('/', async function(req, res) {
     delete req.session.tempUser;
 
     if (courses.length === 0) {
-      // Needed for course-form route
-      req.session.student_number = student_number;
-
-      // Respond with alert and client-side redirect
+      // Respond with alert and redirect to course form
       return res.send(`
         <script>
           alert("Course Info Required: Please complete your course schedule before proceeding to lab booking.");
@@ -59,7 +59,7 @@ router.post('/', async function(req, res) {
       `);
     }
 
-    // If course data exists, proceed to lab booking
+    // Redirect to lab booking if course data exists
     return res.redirect('/lab');
 
   } catch (err) {
