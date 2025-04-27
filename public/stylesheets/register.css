@@ -3,12 +3,11 @@ body {
   padding: 0;
   display: flex;
   height: 100vh;
-  font-family: 'Poppins', sans-serif;
-  background-color: #fff;
+  background-color: #EEEEEE;
   overflow: hidden;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Split screen layout */
 section.left-section {
   width: 60%;
   height: 100%;
@@ -22,12 +21,12 @@ section.left-section {
 section.right-section {
   width: 40%;
   height: 100%;
-  background: url('/images/cmu2.webp') no-repeat center;
+  background: url('/images/register.webp') no-repeat center;
   background-size: cover;
 }
 
 section.left-section header {
-  background-color: #001a5c;
+  background-color: #8E1616;
   position: sticky;
   top: 0;
   width: 100%;
@@ -73,13 +72,11 @@ section.left-section header {
 
 h2 {
   text-align: center;
-  color: #001a5c;
-  font-size: 1.8rem;
-  margin: 25px 0;
-  padding: 0 20px;
+  color: #8E1616;
+  font-size: 20px;
+  font-weight: bold; 
 }
 
-/* Content container */
 .content-container {
   flex: 1;
   display: flex;
@@ -89,7 +86,6 @@ h2 {
   box-sizing: border-box;
 }
 
-/* Alert styling */
 .alert {
   background-color: #f8d7da;
   color: #721c24;
@@ -99,7 +95,6 @@ h2 {
   text-align: center;
 }
 
-/* Form styling */
 form {
   width: 100%;
   max-width: 550px;
@@ -112,17 +107,16 @@ form {
 
 .form-group label {
   display: block;
-  color: #001a5c;
+  color: #8E1616;
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 8px;
 }
 
-/* Input fields */
 input {
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 20px;
   font-size: 14px;
   font-family: 'Poppins', sans-serif;
@@ -132,11 +126,10 @@ input {
 }
 
 input:focus {
-  border-color: #001a5c;
-  box-shadow: 0 0 5px rgba(0, 26, 92, 0.2);
+  border-color: #8E1616;
+  box-shadow: 0 0 8px rgba(49, 0, 0, 0.781);
 }
 
-/* Password input container */
 .password-input-container {
   position: relative;
 }
@@ -147,10 +140,9 @@ input:focus {
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #001a5c;
+  color: #8E1616;
 }
 
-/* Password strength and match indicators */
 .password-strength, .password-match {
   margin-top: 8px;
   padding: 5px 10px;
@@ -169,14 +161,12 @@ input:focus {
   background-color: rgba(255, 0, 0, 0.1);
 }
 
-/* Strength levels styling */
 .strength-1, .strength-2, .strength-3, .strength-4, .strength-5 {
   padding: 5px 10px;
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Password errors */
 .password-errors {
   background-color: #f8d7da;
   color: #721c24;
@@ -191,14 +181,13 @@ input:focus {
   padding-left: 20px;
 }
 
-/* Submit button */
 .submit-container {
   text-align: center;
   margin-top: 30px;
 }
 
 button {
-  background-color: #001a5c;
+  background-color: #8E1616;
   color: white;
   border: none;
   border-radius: 20px;
@@ -211,7 +200,7 @@ button {
 }
 
 button:hover {
-  background-color: #002480;
+  background-color: rgb(83, 3, 7);
   transform: translateY(-2px);
 }
 
@@ -219,10 +208,9 @@ button:active {
   transform: translateY(0);
 }
 
-/* Footer styling */
 footer {
   width: 100%;
-  background-color: #001a5c;
+  background-color: #8E1616;
   color: white;
   text-align: center;
   padding: 15px 0;
@@ -230,7 +218,6 @@ footer {
   font-size: 14px;
 }
 
-/* Responsive design */
 @media screen and (max-width: 992px) {
   section.left-section {
     width: 70%;

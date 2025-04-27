@@ -1,175 +1,356 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #f4f7fa;
+  background-color: #EEEEEE;
   margin: 0;
   padding: 0;
+  color: #333;
 }
 
-h2 {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 24px;
-  color: #1f3c6e;
-
- 
-}
-#navbar {
+nav {
+  background-color: #8E1616;
+  color: white;
+  padding: 5px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
   position: fixed;
+  width: 100%;
   top: 0;
   left: 0;
-  right: 0;
-  height: 30px;
-  background-color: #1f3c6e;
   z-index: 1000;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-} 
-
-form {
-  max-width: 600px;
-  margin: 30px auto;
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
 }
 
-label {
-  font-weight: bold;
-  margin-bottom: 8px;
-  display: block;
-}
-
-input, select, #submit-btn {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-input[type="date"], input[type="time"] {
-  background-color: #fff;
-}
-
-#submit-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-#submit-btn:hover {
-  background-color: #0056b3;
-}
-
-#availability-status {
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-}
-
-/* Navigation Styles */
-nav {
-  background-color: #1f3c6e;
-  padding: 10px 20px;
-}
-
-.nav {
+nav ul {
   list-style: none;
   display: flex;
   padding: 0;
   margin: 0;
-  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
-a {
-  margin-left: 40px;
-  font-weight: bold;
+nav ul li {
+  margin-left: 20px;
 }
 
-.nav-link {
+nav ul li a.nav-link {
   color: white;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 25px;
+  transition: color 0.3s;
+  gap: 10px;
 }
-
-.nav-link:hover {
-  text-decoration: underline;
-}
-
-
-.nav-link.active {
+p {
+  font-size: 16Px;
+  color: white;
   font-weight: bold;
-  color: #ffc107;
+  margin-left: 70px;
+}
+
+nav ul li a.nav-link:hover {
+  color: #EEEEEE;
+}
+
+nav ul li a.nav-link[href="/lab"] {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+nav ul li a.nav-link[href="/lab/logout"] {
+  background-color: #EEEEEE;
+  color: #8E1616;
+  border: none;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px 15px;
+  border-radius: 20px;
+  margin-right: 40px
+
+}
+
+nav ul li a.nav-link[href="/lab/logout"]:hover {
+  color: #EEEEEE;
+  background-color: rgb(83, 3, 7);
+}
+
+form {
+  max-width: 1000px;
+  margin: 30px auto 30px auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 45%;
+  gap: 10px;
+}
+
+.form-group input,
+.form-group select {
+  width: 90%; 
+  padding: 10px 10px; 
+  border-radius: 20px;
+  border: 2px solid #ccc;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+  margin-left: 20px;
+}
+
+.form-group select {
+  appearance: none;
+  background: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231f3c6e'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e") no-repeat right 15px center;
+  background-size: 20px;
+  background-color: white;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #8E1616;
+  box-shadow: 0 0 8px rgba(49, 0, 0, 0.781);
+  outline: none;
+}
+
+
+#submit-btn {
+  background-color: #8E1616;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 12px 20px;
+  border-radius: 20px;
+  width: 30%;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+#submit-btn:hover {
+  background-color: #5a0a0a;
 }
 
 .availability-container {
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  margin-top: 60px;
+  background-color: transparent;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(2, 0, 0, 0.2);
+  margin: 120px auto 30px auto;
+  width: 70%;
+  font-family: 'Poppins', sans-serif;
+  color: #8E1616;
 }
+
 .lab-card {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  background-color: #f8f9fa;
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 2px solid #8E1616;
+  border-radius: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.3s;
 }
+
+.lab-card:hover {
+  background-color: #fff2f2;
+  transform: translateY(-3px);
+}
+
 .lab-name {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #8E1616;
 }
+
 .available {
   color: green;
+  font-weight: bold;
 }
+
 .unavailable {
   color: red;
+  font-weight: bold;
 }
+
 .booked-slots {
-  margin-top: 5px;
-  font-size: 0.9em;
+  margin-top: 8px;
+  font-size: 14px;
 }
+
 .time-slot {
   display: inline-block;
-  margin-right: 10px;
-  padding: 2px 5px;
+  margin-right: 8px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
   background-color: #ffecec;
-  border-radius: 3px;
-}
-#availability-status {
-  margin: 15px 0;
-  padding: 10px;
-  border-radius: 4px;
-}
-.form-group {
-  margin-bottom: 10px;
-}
-.form-group label {
-  display: block;
-  margin-bottom: 3px;
+  border: 1px solid #8E1616;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #8E1616;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Responsive Design */
+.time-slot:hover {
+  background-color: #8E1616;
+  color: white;
+  cursor: pointer;
+}
+
+h2 {
+  font-size: 20px;
+  margin-top: 70px;
+  margin-left: 580px;
+  color: #8E1616;
+  font-weight: bold;
+}
+
+
 @media (max-width: 768px) {
-  .nav {
-    flex-direction: column;
-    align-items: center;
-  }
-
-s */
-
   form {
-    width: 90%;
-    padding: 15px;
+    flex-direction: column;
   }
 
-  h2 {
-    font-size: 22px;
+  .form-group {
+    flex: 1 1 100%;
+  }
+
+  .availability-container {
+    width: 90%;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  header ul {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+  }
+
+  header ul li {
+    margin: 10px 0;
+  }
+
+  #submit-btn {
+    width: 100%;
+  }
+}
+
+.availability-container {
+  background-color: transparent;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(2, 0, 0, 0.2);
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 120px;
+  margin-bottom: 30px;
+  width: 70%;
+  font-family: 'Poppins', sans-serif;
+  color: #8E1616;
+}
+
+.lab-card {
+  background-color: #f8f9fa;
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 2px solid #8E1616;
+  border-radius: 15px;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lab-card:hover {
+  background-color: #fff2f2;
+  transform: translateY(-3px);
+}
+
+.lab-name {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #8E1616;
+}
+
+.available {
+  color: green;
+  font-weight: bold;
+}
+
+.unavailable {
+  color: red;
+  font-weight: bold;
+}
+
+.booked-slots {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.time-slot {
+  display: inline-block;
+  margin-right: 8px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  background-color: #ffecec;
+  border: 1px solid #8E1616;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #8E1616;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.time-slot:hover {
+  background-color: #8E1616;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+  form {
+    flex-direction: column;
+  }
+
+  .form-group {
+    flex: 1 1 100%;
+  }
+
+  .availability-container {
+    width: 90%;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  header ul {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+  }
+
+  header ul li {
+    margin: 10px 0;
+  }
+
+  #submit-btn {
+    width: 100%;
   }
 }
